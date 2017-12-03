@@ -80,6 +80,47 @@
             <button class="fake-noteoff" data-note="AS" data-inputid="input-15" data-channel="14">I14 A# off</button>
             <button class="fake-noteoff" data-note="B" data-inputid="input-15" data-channel="1">I1 H off</button>
         </p>
+        <button id="toggle-settings" title="show/hide settings">
+            toggle settings
+        </button>
+        <div id="settings">
+            <fieldset id="hotspot-settings">
+                <label for="input-settings">MIDI inputs</label><br>
+                <label for="settings-hotspot-resolution">Handle clock events for</label>
+                TODO: list clients available midi inputs
+                <br>
+
+            </fieldset>
+            <fieldset id="hotspot-settings">
+                <label for="hotspot-settings">Hot spots</label><br>
+                <label for="settings-hotspot-resolution">Resolution [clock ticks]</label>
+                <select id="settings-hotspot-resolution">
+                    <option value="24">12 (1/8 bar)</option>
+                    <option value="24">24 (1/4 bar)</option>
+                    <option value="48">24 (1/2 bar)</option>
+                    <option value="48">96 (1bar)</option>
+                </select>
+                <br>
+                <label for="settings-hotspot-observationPeriod">Observation Period [bars]</label>
+                <select id="settings-hotspot-observationPeriod">
+                    <option value="1">1 bar</option>
+                    <option value="4">4 bars</option>
+                    <option value="8">8 bars</option>
+                    <option value="16">16 bars</option>
+                </select>
+                <br>
+                <label for="settings-hotspot-lifetime">Lifetime [seconds]</label>
+                <input id="settings-hotspot-lifetime" value="40" type="number"/>
+            </fieldset>
+            <fieldset id="other-settings">
+                <label for="other-settings">Other</label><br>
+                <label for="settings-other-hidecursor">Hide Cursor after [miliseconds]</label>
+                <input id="settings-other-hidecursor" value="3000" />
+                <br>
+                <label for="settings-other-nosleep">Disable Screensaver</label>
+                <input type="checkbox" id="settings-other-nosleep" value="3000" />
+            </fieldset>
+        </div>
         <div id="big-overlay"></div>
         <!-- MIT. Copyright (c) Rich Tibbett         https://github.com/richtr/NoSleep.js -->
         <!-- MIT. Copyright (c) Jean-Philippe Côté   https://github.com/cotejp/webmidi -->

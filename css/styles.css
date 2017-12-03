@@ -144,3 +144,28 @@ button {
 	top: -30px;
 	color: #555;
 }
+
+
+#toggle-settings {
+	display: none;
+	background: url(../img/Cog_font_awesome.svg) top left no-repeat;
+	text-indent: -999999em;
+	border: none;
+	width: 4em;
+	height: 4em;
+	position: absolute;
+	bottom: 1em;
+	right: 1em;
+}
+
+#settings {
+	display: none;
+	position: absolute;
+	height: 80vh;
+	width: 80vw;
+	top: 10vh;
+	left: 10vw;
+	background-color: #111;
+	border: 2px solid #444;
+	z-index: 1001;
+}
