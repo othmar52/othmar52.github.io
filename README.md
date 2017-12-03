@@ -9,7 +9,7 @@ In case you're playing synthesizers with a couple of people to a 4/4 beat, all s
   * Realtime displaying of channel separated "Hot keys" based on configurable calculation
 
 ## Requirements
-  * Modern desktop webbrowser
+  * Modern webbrowser that supports [Web MIDI API](https://webaudio.github.io/web-midi-api/)
   * MIDI interface connected to the pc
     - receive MIDI clock signal
     - receive MIDI noteon/noteoff events on different channels and/or MIDI inputs
