@@ -8,6 +8,8 @@ In case you're playing synthesizers with a couple of people to a 4/4 beat, all s
   * Indication of incoming MIDI clock as a 16 bar loop
   * Realtime displaying of channel separated "Hot keys" based on configurable calculation
 
+[DEMO](https://othmar52.github.io/) with fake midi events
+
 ## Requirements
   * Modern webbrowser that supports [Web MIDI API](https://webaudio.github.io/web-midi-api/)
   * MIDI interface connected to the pc
