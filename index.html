@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Blazing Baton</title>
+        <meta charset="utf-8">
+        <meta name="description" content="Infoscreen for live music performing with MIDI equipment" />
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Blazing Baton">
+        <meta property="og:description" content="Infoscreen for live music performing with MIDI equipment" />
+        <meta name="keywords" content="midi clock monitoring, midi clock overview, midi clock visualization, display midi clock, midi clock loop, break point support, music live performing, midi quipment" />
+
+        <link rel="shortcut icon" href="./img/dinplug.jpg">
+        <link rel="stylesheet" type="text/css" media="all" href="./vendor/webfontkit/open-sans/open-sans.min.css" />
+        <link rel="stylesheet" href="./css/simplepiano.css">
+        <link rel="stylesheet" href="./css/styles.css">
+    </head>
+    <body>
+        <div class="progBar progBarReverse" id="progBar16">
+            <div class="innerProgBar" id="innerProgBar16"></div>
+        </div>
+        <br><br>
+        <div class="progBar" id="progBar4">
+            <div class="innerProgBar" id="innerProgBar4"></div>
+        </div>
+        <div class="bottom-grid">
+            <div class="col-piano">
+                <ul class="simplepiano" id="realpiano">
+                    <li class="white C" data-keyname="C"></li>
+                    <li class="black CS" data-keyname="CS"></li>
+                    <li class="white D" data-keyname="D"></li>
+                    <li class="black DS" data-keyname="DS"></li>
+                    <li class="white E" data-keyname="E"></li>
+                    <li class="white F" data-keyname="F"></li>
+                    <li class="black FS" data-keyname="FS"></li>
+                    <li class="white G" data-keyname="G"></li>
+                    <li class="black GS" data-keyname="GS"></li>
+                    <li class="white A" data-keyname="A"></li>
+                    <li class="black AS" data-keyname="AS"></li>
+                    <li class="white B" data-keyname="B"></li>
+                </ul>
+                <div id="hotspots-container">
+
+                </div>
+            </div>
+            <div class="col-numbers">
+                <div id='time'>
+                    <div>00:00</div>
+                </div>
+                <div id="bpm">
+                    <span id="bpm-value">0</span> <span id="bpm-label">BPM</span>
+                </div>
+            </div>
+        </div>
+        <p id="fake-events">
+            <button id="fake-start">start</button>
+            <button class="fake-noteon" data-note="C" data-inputid="input-15" data-channel="1">I1 C on</button>
+            <button class="fake-noteon" data-note="CS" data-inputid="input-15" data-channel="1">I1 C# on</button>
+            <button class="fake-noteon" data-note="D" data-inputid="input-15" data-channel="5">I5 D on</button>
+            <button class="fake-noteon" data-note="DS" data-inputid="input-15" data-channel="5">I5 D# on</button>
+            <button class="fake-noteon" data-note="E" data-inputid="input-15" data-channel="1">I1 E on</button>
+            <button class="fake-noteon" data-note="F" data-inputid="input-15" data-channel="7">I7 F on</button>
+            <button class="fake-noteon" data-note="FS" data-inputid="input-15" data-channel="7">I7 F# on</button>
+            <button class="fake-noteon" data-note="G" data-inputid="input-15" data-channel="8">I8 G on</button>
+            <button class="fake-noteon" data-note="GS" data-inputid="input-15" data-channel="8">I8 G# on</button>
+            <button class="fake-noteon" data-note="A" data-inputid="input-15" data-channel="14">I14 A on</button>
+            <button class="fake-noteon" data-note="AS" data-inputid="input-15" data-channel="14">I14 A# on</button>
+            <button class="fake-noteon" data-note="B" data-inputid="input-15" data-channel="1">I1 H on</button>
+            <br>
+            <button id="fake-stop">stop</button>
+            <button class="fake-noteoff" data-note="C" data-inputid="input-15" data-channel="1">I1 C off</button>
+            <button class="fake-noteoff" data-note="CS" data-inputid="input-15" data-channel="1">I1 C# off</button>
+            <button class="fake-noteoff" data-note="D" data-inputid="input-15" data-channel="5">I5 D off</button>
+            <button class="fake-noteoff" data-note="DS" data-inputid="input-15" data-channel="5">I5 D# off</button>
+            <button class="fake-noteoff" data-note="E" data-inputid="input-15" data-channel="1">I1 E off</button>
+            <button class="fake-noteoff" data-note="F" data-inputid="input-15" data-channel="7">I7 F off</button>
+            <button class="fake-noteoff" data-note="FS" data-inputid="input-15" data-channel="7">I7 F# off</button>
+            <button class="fake-noteoff" data-note="G" data-inputid="input-15" data-channel="8">I8 G off</button>
+            <button class="fake-noteoff" data-note="GS" data-inputid="input-15" data-channel="8">I8 G# off</button>
+            <button class="fake-noteoff" data-note="A" data-inputid="input-15" data-channel="14">I14 A off</button>
+            <button class="fake-noteoff" data-note="AS" data-inputid="input-15" data-channel="14">I14 A# off</button>
+            <button class="fake-noteoff" data-note="B" data-inputid="input-15" data-channel="1">I1 H off</button>
+        </p>
+        <div id="big-overlay"></div>
+        <!-- MIT. Copyright (c) Rich Tibbett         https://github.com/richtr/NoSleep.js -->
+        <!-- MIT. Copyright (c) Jean-Philippe Côté   https://github.com/cotejp/webmidi -->
+        <script type="text/javascript" src="./vendor/richtr/NoSleep.js/noSleep.js"></script>
+        <script type="text/javascript" src="./vendor/cotejp/webmidi/webmidi.min.js"></script>
+        <script type="text/javascript" src="./js/blazing.baton.js"></script>
+        <script type="text/javascript">
+            // for option documentation see: https://github.com/othmar52/blazing-baton/
+            var demoOptions = {
+                inputNames: {
+                    clock: [
+                        "MIDIIN16 (iConnectMIDI4+)"
+                    ],
+                    notes: [
+                        "MIDIIN16 (iConnectMIDI4+)",
+                        "MIDIIN15 (iConnectMIDI4+)"
+                    ]
+                },
+                inputCustomization: {
+                    "all":         { color: "grey",   label: "Sum"          },
+                    "input-15-1":  { color: "orange", label: "JD-Xi D1"     },
+                    "input-15-2":  { color: "orange", label: "JD-Xi D2"     },
+                    "input-15-3":  { color: "yellow", label: "JD-Xi A"      },
+                    "input-15-5":  { color: "green",  label: "System 1"     },
+                    "input-15-7":  { color: "red",    label: "Virus"        },
+                    "input-15-8":  { color: "cyan",   label: "Microkorg"    },
+                    "input-15-14": { color: "blue",   label: "MFB Synth II" },
+                    "input-15-9":  { color: "blue",   label: "KORG Gadget"  },
+                    "input-13-1":  { color: "pink",   label: "Bass Station" },
+                    "input-14-1":  { color: "violet", label: "Mininova"     }
+                },
+                hotSpot: {
+                    resolution: 24, // [clock ticks] (24 = 1/4 bar)
+                    observationPeriod: 4, // [bars]
+                    showMerged: true, // hotspot row with sum of all channels
+                    maxChannelRows: 5,
+                    lifeTime: 40, // [seconds]
+                    ignoreChannel10: true // default MIDI channel for drums
+                },
+                time: {
+                    totalTimeWarning: 15*60, // [seconds]
+                    stopStartTreshold: 3000 // [miliseconds]
+                },
+                hideCursorAfter: 10000, // [miliseconds]
+                noSleep: true,  // disable screensaver on incoming clock
+                bar16changeAnnounce: "and" // last part of huge count down
+            };
+            var blazingBaton = new BlazingBaton(demoOptions);
+        </script>
+    </body>
+</html>
