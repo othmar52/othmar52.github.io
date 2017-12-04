@@ -147,19 +147,18 @@ button {
 
 
 #toggle-settings {
-	display: none;
+	d!isplay: none;
 	background: url(../img/Cog_font_awesome.svg) top left no-repeat;
 	text-indent: -999999em;
 	border: none;
 	width: 4em;
 	height: 4em;
 	position: absolute;
-	bottom: 1em;
+	bottom: 4em;
 	right: 1em;
 }
 
 #settings {
-	display: none;
 	position: absolute;
 	height: 80vh;
 	width: 80vw;
@@ -168,4 +167,10 @@ button {
 	background-color: #111;
 	border: 2px solid #444;
 	z-index: 1001;
+	overflow-y: auto;
+}
+
+#settings-columns {
+	display: grid;
+	grid-template-columns:  50% 50%;
 }

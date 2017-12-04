@@ -83,42 +83,75 @@
         <button id="toggle-settings" title="show/hide settings">
             toggle settings
         </button>
-        <div id="settings">
+        <div id="settings" class="hidden">
+            <h3>Settings are not functional yet</h3>
+            <div id="settings-columns">
+                <fieldset id="general-settings">
+                    <legend for="general-settings">General</legend>
+                    <label for="settings-general-hidecursor">
+                        <input id="settings-general-hidecursor" value="3000" />
+                        Hide Cursor after [miliseconds]
+                    </label>
+                    <br>
+                    <label for="settings-general-nosleep">
+                        <input type="checkbox" id="settings-general-nosleep" value="3000" />
+                        Disable Screensaver on incoming clock
+                    </label>
+                    <br>
+                    <label for="settings-general-showFakeEvents">
+                        <input type="checkbox" id="settings-general-showFakeEvents" value="1" checked="checked" />
+                        Show fake event buttons
+                    </label>
+                    <br>
+                    <label for="settings-general-showPiano">
+                        <input type="checkbox" id="settings-general-showPiano" value="1" checked="checked" />
+                        Show piano for all note events
+                    </label>
+                </fieldset>
+                <fieldset id="hotspot-settings">
+                    <legend for="hotspot-settings">Hot spots</legend>
+                    <label for="settings-hotspot-enable">
+                        <input type="checkbox" id="settings-hotspot-enable" value="1" checked="checked" />
+                        Enable hotspots
+                    </label>
+                    <br>
+                    <label for="settings-hotspot-showMerged">
+                        <input type="checkbox" id="settings-hotspot-showMerged" value="1" />
+                        Show merged sum of all channels
+                    </label>
+                    <br>
+                    <label for="settings-hotspot-resolution">
+                        <select id="settings-hotspot-resolution">
+                            <option value="24">12 (1/8 bar)</option>
+                            <option value="24">24 (1/4 bar)</option>
+                            <option value="48">24 (1/2 bar)</option>
+                            <option value="48">96 (1bar)</option>
+                        </select>
+                        Resolution [clock ticks]
+                    </label>
+                    <br>
+                    <label for="settings-hotspot-observationPeriod">
+                        <select id="settings-hotspot-observationPeriod">
+                            <option value="1">1 bar</option>
+                            <option value="4">4 bars</option>
+                            <option value="8">8 bars</option>
+                            <option value="16">16 bars</option>
+                        </select>
+                        Observation Period [bars]
+                    </label>
+                    <br>
+                    <label for="settings-hotspot-lifetime">
+                        <input id="settings-hotspot-lifetime" value="40" type="number"/>
+                        Lifetime [seconds]
+                    </label>
+                </fieldset>
+            </div>
             <fieldset id="hotspot-settings">
-                <label for="input-settings">MIDI inputs</label><br>
-                <label for="settings-hotspot-resolution">Handle clock events for</label>
-                TODO: list clients available midi inputs
-                <br>
+                <legend for="input-settings">MIDI input configuration</legend>
+                <p>Configure which of the recognised inputs/channels provide clock and note events</p>
+                <ul id="input-config">
 
-            </fieldset>
-            <fieldset id="hotspot-settings">
-                <label for="hotspot-settings">Hot spots</label><br>
-                <label for="settings-hotspot-resolution">Resolution [clock ticks]</label>
-                <select id="settings-hotspot-resolution">
-                    <option value="24">12 (1/8 bar)</option>
-                    <option value="24">24 (1/4 bar)</option>
-                    <option value="48">24 (1/2 bar)</option>
-                    <option value="48">96 (1bar)</option>
-                </select>
-                <br>
-                <label for="settings-hotspot-observationPeriod">Observation Period [bars]</label>
-                <select id="settings-hotspot-observationPeriod">
-                    <option value="1">1 bar</option>
-                    <option value="4">4 bars</option>
-                    <option value="8">8 bars</option>
-                    <option value="16">16 bars</option>
-                </select>
-                <br>
-                <label for="settings-hotspot-lifetime">Lifetime [seconds]</label>
-                <input id="settings-hotspot-lifetime" value="40" type="number"/>
-            </fieldset>
-            <fieldset id="other-settings">
-                <label for="other-settings">Other</label><br>
-                <label for="settings-other-hidecursor">Hide Cursor after [miliseconds]</label>
-                <input id="settings-other-hidecursor" value="3000" />
-                <br>
-                <label for="settings-other-nosleep">Disable Screensaver</label>
-                <input type="checkbox" id="settings-other-nosleep" value="3000" />
+                </ul>
             </fieldset>
         </div>
         <div id="big-overlay"></div>
@@ -133,10 +166,12 @@
         <script type="text/javascript" src="./js/src/multiStop.js"></script>
         <script type="text/javascript" src="./js/src/hotSpots.js"></script>
         <script type="text/javascript" src="./js/src/overlayCountdown.js"></script>
+        <script type="text/javascript" src="./js/src/settings.js"></script>
         <script type="text/javascript" src="./js/src/time.js"></script>
         <script type="text/javascript" src="./js/src/idle.js"></script>
         <script type="text/javascript" src="./js/src/bpm.js"></script>
         <script type="text/javascript" src="./js/src/notify.js"></script>
+        <script type="text/javascript" src="./js/src/cookie.js"></script>
         <script type="text/javascript">
             // for option documentation see: https://github.com/othmar52/blazing-baton/
             var demoOptions = {

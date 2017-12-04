@@ -8,7 +8,13 @@
  * @todo: check if stucked notes are a problem and implement some cleaunUp
  *
  * @todo: find a graphic designer for GUI improvements
- * 
+ *
+ * @todo: optionally hide duration counter by configuration
+ *
+ * @todo: activate some build tool for those splitted javascript files
+ *
+ * @todo: provide a downloadable .html for offline usage
+ *
  */
 function BlazingBaton(userOptions) {
     var defaultOptions = {
@@ -117,15 +123,25 @@ function BlazingBaton(userOptions) {
         fakeNoteOn: ".fake-noteon",
         fakeNoteOff: ".fake-noteoff",
 
-        hotspotsContainer: "#hotspots-container"
+        hotspotsContainer: "#hotspots-container",
+
+        settings: "#settings",
+        toggleSettings: "#toggle-settings",
+        inputConfig: "#input-config"
     };
+
+    // visibility of some elements
+    // instead of querying the DOM store state in this helper object
+    this.guiStatus = {
+        settings: false
+    }
 
     // helper vars for hiding mousecursor on idle
     this.mouseTimer = null;
     this.cursorVisible = true;
 
     this.inputs = [];
-    
+
     this.freeInputSlot = true;
     this.init();
 }
@@ -182,6 +198,7 @@ BlazingBaton.prototype.init = function() {
 
     this.initIdleBehaviour();
     this.initDemo();
+    this.initSettings();
 
     if(this.opts.hotSpot.showMerged === true) {
         document.querySelector(this.domSelectors.hotspotsContainer).appendChild(this.getChannelHotspotDom("all"));

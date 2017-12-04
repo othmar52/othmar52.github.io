@@ -166,7 +166,6 @@ BlazingBaton.prototype.refreshHotspotsForInput = function(inputId) {
  *
  * @method getChannelHotspotDom
  * @static
- * @chainable
  *
  * @param inputId {String} The unique input identifier "<midiInput>-<midiChannel>|all"
  *
