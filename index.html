@@ -85,17 +85,29 @@
         </button>
         <div id="settings" class="hidden">
             <h3>Settings are not functional yet</h3>
+            <p>As long as the target group for <strong>Blazing Baton</strong> is zero, this feature won't get implemented.<br>
+                Feel free to <a href="https://github.com/othmar52/blazing-baton/issues" target="_blank">create an issue</a> for this feature request.</p>
             <div id="settings-columns">
                 <fieldset id="general-settings">
                     <legend for="general-settings">General</legend>
                     <label for="settings-general-hidecursor">
-                        <input id="settings-general-hidecursor" value="3000" />
-                        Hide Cursor after [miliseconds]
+                        <input id="settings-general-hidecursor" value="10" size="3" type="text" />
+                        Hide Cursor after [seconds]
                     </label>
                     <br>
                     <label for="settings-general-nosleep">
-                        <input type="checkbox" id="settings-general-nosleep" value="3000" />
+                        <input type="checkbox" id="settings-general-nosleep" value="1" checked="checked" />
                         Disable Screensaver on incoming clock
+                    </label>
+                    <br>
+                    <label for="settings-general-showTime">
+                        <input type="checkbox" id="settings-general-showTime" value="1" checked="checked" />
+                        Show Time
+                    </label>
+                    <br>
+                    <label for="settings-general-showTempo">
+                        <input type="checkbox" id="settings-general-showTempo" value="1" checked="checked" />
+                        Show Tempo
                     </label>
                     <br>
                     <label for="settings-general-showFakeEvents">
@@ -122,12 +134,12 @@
                     <br>
                     <label for="settings-hotspot-resolution">
                         <select id="settings-hotspot-resolution">
-                            <option value="24">12 (1/8 bar)</option>
-                            <option value="24">24 (1/4 bar)</option>
-                            <option value="48">24 (1/2 bar)</option>
-                            <option value="48">96 (1bar)</option>
+                            <option value="24">1/8 bar</option>
+                            <option value="24">1/4 bar</option>
+                            <option value="48">1/2 bar</option>
+                            <option value="48">1bar</option>
                         </select>
-                        Resolution [clock ticks]
+                        Resolution [clock ticks/bar length]
                     </label>
                     <br>
                     <label for="settings-hotspot-observationPeriod">
@@ -141,7 +153,7 @@
                     </label>
                     <br>
                     <label for="settings-hotspot-lifetime">
-                        <input id="settings-hotspot-lifetime" value="40" type="number"/>
+                        <input id="settings-hotspot-lifetime" value="40" type="text" size="3" type="text" />
                         Lifetime [seconds]
                     </label>
                 </fieldset>
