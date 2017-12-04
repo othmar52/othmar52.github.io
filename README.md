@@ -134,7 +134,7 @@ Sometimes MIDI hardware needs a `stop + start` event to be in sync again. To avo
 
 ### `hideCursorAfter` {Number}
 As **Blazing Baton** is an info screen without keyboard/mouse interaction you may want to hide the mouse cursor on idle.
-To disable the hiding set this to `0`. Otherwise you can set any number in `[miliseconds]`
+To disable the hiding set this to `0`. Otherwise you can set any number in `[seconds]`
 
 
 ### `noSleep` {Boolean}

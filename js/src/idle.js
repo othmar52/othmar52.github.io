@@ -2,6 +2,9 @@
 /**
  * invokes a function call to hide mouse cursor
  * and creates an eventlistener to show it again
+ *
+ * @TODO: disable hiding of mouse cursor if opts.hideCursorAfter === 0
+ *
  */
 BlazingBaton.prototype.initIdleBehaviour = function() {
     var that = this;
@@ -15,7 +18,7 @@ BlazingBaton.prototype.initIdleBehaviour = function() {
                 document.querySelector(that.domSelectors.fakeEvents).style.display = "block";
                 that.cursorVisible = true;
             }
-            that.mouseTimer = window.setTimeout(that.hideMouseCursor.bind(that), that.opts.hideCursorAfter);
+            that.mouseTimer = window.setTimeout(that.hideMouseCursor.bind(that), that.opts.hideCursorAfter*1000);
         };
     };
 };

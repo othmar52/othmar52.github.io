@@ -40,7 +40,7 @@ function BlazingBaton(userOptions) {
             totalTimeWarning: 15*60, // [seconds]
             stopStartTreshold: 3000 // [miliseconds]
         },
-        hideCursorAfter: 3000, // [miliseconds]
+        hideCursorAfter: 10, // [seconds]
         noSleep: true,  // disable screensaver on incoming clock
         bar16changeAnnounce: "and" // last part of huge count down
     };
