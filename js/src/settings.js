@@ -1,5 +1,27 @@
 
 /**
+ * this function checks if configuration is useable
+ * if no argument is supplied the default settings will be returned
+ * 
+ * @method getCurrentSettings
+ * @static
+ * 
+ * @TODO: read from cookie or localStorage
+ * @TODO: check status of all noteInputs and clockInputs
+ *
+ * @return {BlazingConfig} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.getCurrentSettings = function(customSettings) {
+
+    // for now keep it simple 
+    if(typeof customSettings !== "undefined") {
+        return customSettings;
+    }
+    return new BlazingConfig();
+    
+};
+
+/**
  * this function lists all javascript destected MIDI inputs
  * as a list in the settings overlay
  * 

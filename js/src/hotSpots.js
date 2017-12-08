@@ -13,6 +13,11 @@
  */
 BlazingBaton.prototype.reorderHotspotRows = function() {
 
+    // nothing to do with disabled hotSpots
+    if(this.opts.show.hotSpots === false) {
+        return this;
+    }
+
     // sort by property activityScore
     var sorted = [];
     for (var inputId in this.inputs) {
@@ -72,6 +77,10 @@ BlazingBaton.prototype.reorderHotspotRows = function() {
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.ensureHotspotRowExists = function(inputId) {
+    // nothing to do with disabled hotSpots
+    if(this.opts.show.hotSpots === false) {
+        return this;
+    }
     try {
         if(this.inputs[inputId].visible === false && this.freeInputSlot === true) {
             this.inputs[inputId].visible = true;
@@ -105,6 +114,10 @@ BlazingBaton.prototype.ensureHotspotRowExists = function(inputId) {
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.refreshHotspots = function() {
+    // nothing to do with disabled hotSpots
+    if(this.opts.show.hotSpots === false) {
+        return this;
+    }
     if(this.opts.hotSpot.showMerged === true) {
         this.refreshHotspotsForInput("all");
     }
@@ -132,6 +145,10 @@ BlazingBaton.prototype.refreshHotspots = function() {
  * @param inputId {String} The unique input identifier "<midiInput>-<midiChannel>|all"
  */
 BlazingBaton.prototype.refreshHotspotsForInput = function(inputId) {
+    // nothing to do with disabled hotSpots
+    if(this.opts.show.hotSpots === false) {
+        return this;
+    }
     var score = {
         total: 0,
         top: 0
@@ -182,11 +199,11 @@ BlazingBaton.prototype.getChannelHotspotDom = function(inputId) {
         B: "white"
     };
 
-    var label = inputId;
-    var colorClass = this.opts.inputCustomization.all.color;
-    if(typeof this.opts.inputCustomization[inputId] !== "undefined") {
-        label = this.opts.inputCustomization[inputId].label;
-        colorClass = this.opts.inputCustomization[inputId].color;
+    var label = this.opts.noteInputs.all.label;
+    var colorClass = this.opts.noteInputs.all.color;
+    if(typeof this.opts.noteInputs["i"+inputId] !== "undefined") {
+        label = this.opts.noteInputs["i"+inputId].label;
+        colorClass = this.opts.noteInputs["i"+inputId].color;
     }
 
     var ul = document.createElement("ul");
@@ -256,7 +273,6 @@ BlazingBaton.prototype.handleSegmentChange = function() {
     var i = this.openNotes.length;
     var microTime = Date.now();
 
-    
     while(i--) {
         // create new historyEntry
         this.notesHistory.push({

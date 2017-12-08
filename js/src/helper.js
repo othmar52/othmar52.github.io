@@ -179,4 +179,21 @@ BlazingBaton.prototype.mergeDeep = function(target, ...sources) {
     return this.mergeDeep(target, ...sources);
 }
 
+/**
+ * this functions pauses script execution
+ *
+ * @method sleep
+ * @author https://www.phpied.com/sleep-in-javascript/
+ * @static
+ * @TODO: check for removal
+ * @return void
+ */
+BlazingBaton.prototype.sleep = function(milliseconds){
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
+}
 

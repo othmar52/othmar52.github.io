@@ -10,9 +10,13 @@
  *
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
-BlazingBaton.prototype.checkTempoRefresh = function(){
+BlazingBaton.prototype.checkTempoRefresh = function() {
+    // nothing to do with disabled tempo
+    if(this.opts.show.tempo === false) {
+        return this;
+    }
     if(this.status.real.clockEventsCounter !== this.bpmCalculateDelay) {
-        return;
+        return this;
     }
     var timeDeltaSinceStart = Date.now() - this.status.real.lastCounterReset;
     var pulseLength = (timeDeltaSinceStart)/this.status.real.clockEventsCounter;

@@ -8,9 +8,12 @@
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.checkTime = function(){
-
+    // nothing to do with disabled time
+    if(this.opts.show.time === false) {
+        return this;
+    }
     if(this.status.fake.playing === false) {
-        return;
+        return this;
     }
     // check if we have to stop timer
     if(this.status.fake.active === true) {
@@ -40,9 +43,13 @@ BlazingBaton.prototype.checkTime = function(){
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.checkTotalTime = function(event) {
+    // nothing to do with disabled time
+    if(this.opts.show.time === false) {
+        return this;
+    }
     var playTimeInSeconds = (Date.now() - this.status.fake.lastStart) / 1000;
     if(playTimeInSeconds < this.opts.time.totalTimeWarning*0.7) {
-        return;
+        return this;
     }
     document.querySelector(this.domSelectors.time).classList.add(
         (playTimeInSeconds > this.opts.time.totalTimeWarning) ? "danger" : "info"
@@ -60,6 +67,10 @@ BlazingBaton.prototype.checkTotalTime = function(event) {
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.resetTime = function(){
+    // nothing to do with disabled time
+    if(this.opts.show.time === false) {
+        return this;
+    }
     document.querySelector(this.domSelectors.time).classList.remove("danger", "info");
     document.querySelector(this.domSelectors.time).innerHTML = "00:00";
     this.refreshHotspots();

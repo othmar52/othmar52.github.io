@@ -15,16 +15,16 @@
         <link rel="stylesheet" href="./css/styles.css">
     </head>
     <body>
-        <div class="progBar progBarReverse" id="progBar16">
+        <div class="progBar progBarReverse hidden" id="progBar16">
             <div class="innerProgBar" id="innerProgBar16"></div>
         </div>
         <br><br>
-        <div class="progBar" id="progBar4">
+        <div class="progBar hidden" id="progBar4">
             <div class="innerProgBar" id="innerProgBar4"></div>
         </div>
         <div class="bottom-grid">
             <div class="col-piano">
-                <ul class="simplepiano" id="realpiano">
+                <ul class="simplepiano hidden" id="piano">
                     <li class="white C" data-keyname="C"></li>
                     <li class="black CS" data-keyname="CS"></li>
                     <li class="white D" data-keyname="D"></li>
@@ -43,10 +43,10 @@
                 </div>
             </div>
             <div class="col-numbers">
-                <div id='time'>
+                <div id="time" class="hidden">
                     <div>00:00</div>
                 </div>
-                <div id="bpm">
+                <div id="bpm" class="hidden">
                     <span id="bpm-value">0</span> <span id="bpm-label">BPM</span>
                 </div>
             </div>
@@ -171,7 +171,9 @@
         <!-- MIT. Copyright (c) Jean-Philippe Côté   https://github.com/cotejp/webmidi -->
         <script type="text/javascript" src="./vendor/richtr/NoSleep.js/noSleep.js"></script>
         <script type="text/javascript" src="./vendor/cotejp/webmidi/webmidi.min.js"></script>
+        <!-- TODO: implement some build tool for merging and minifying -->
         <script type="text/javascript" src="./js/blazing.baton.js"></script>
+        <script type="text/javascript" src="./js/src/blazingConfig.js"></script>
         <script type="text/javascript" src="./js/src/helper.js"></script>
         <script type="text/javascript" src="./js/src/fakeEvents.js"></script>
         <script type="text/javascript" src="./js/src/midiEvents.js"></script>
@@ -186,46 +188,83 @@
         <script type="text/javascript" src="./js/src/cookie.js"></script>
         <script type="text/javascript">
             // for option documentation see: https://github.com/othmar52/blazing-baton/
-            var demoOptions = {
-                inputNames: {
-                    clock: [
-                        "MIDIIN16 (iConnectMIDI4+)"
-                    ],
-                    notes: [
-                        "MIDIIN16 (iConnectMIDI4+)",
-                        "MIDIIN15 (iConnectMIDI4+)"
-                    ]
-                },
-                inputCustomization: {
-                    "all":         { color: "grey",   label: "Sum"          },
-                    "input-15-1":  { color: "orange", label: "JD-Xi D1"     },
-                    "input-15-2":  { color: "orange", label: "JD-Xi D2"     },
-                    "input-15-3":  { color: "yellow", label: "JD-Xi A"      },
-                    "input-15-5":  { color: "green",  label: "System 1"     },
-                    "input-15-7":  { color: "red",    label: "Virus"        },
-                    "input-15-8":  { color: "cyan",   label: "Microkorg"    },
-                    "input-15-14": { color: "blue",   label: "MFB Synth II" },
-                    "input-15-9":  { color: "blue",   label: "KORG Gadget"  },
-                    "input-13-1":  { color: "pink",   label: "Bass Station" },
-                    "input-14-1":  { color: "violet", label: "Mininova"     }
-                },
-                hotSpot: {
-                    resolution: 24, // [clock ticks] (24 = 1/4 bar)
-                    observationPeriod: 4, // [bars]
-                    showMerged: true, // hotspot row with sum of all channels
-                    maxChannelRows: 5,
-                    lifeTime: 40, // [seconds]
-                    ignoreChannel10: true // default MIDI channel for drums
-                },
-                time: {
-                    totalTimeWarning: 15*60, // [seconds]
-                    stopStartTreshold: 3000 // [miliseconds]
-                },
-                hideCursorAfter: 10, // [seconds]
-                noSleep: true,  // disable screensaver on incoming clock
-                bar16changeAnnounce: "and" // last part of huge count down
-            };
-            var blazingBaton = new BlazingBaton(demoOptions);
+
+            var demoConfig = new BlazingConfig();
+
+            demoConfig.addInput(
+                new NoteInput({
+                    label: "JD-Xi D1",
+                    color: "orange",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 1
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "JD-Xi D2",
+                    color: "orange",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 2
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "JD-Xi A",
+                    color: "blue",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 3
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "System 1",
+                    color: "green",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 5
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "Virus A",
+                    color: "red",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 7
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "Microkorg",
+                    color: "cyan",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 8
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "MFB Synth II",
+                    color: "blue",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 14
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "KORG Gadget",
+                    color: "blue",
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15",
+                    channel: 9
+                })
+            ).addInput(
+                new NoteInput({
+                    label: "Bass Station",
+                    color: "pink",
+                    name: "MIDIIN15 (iConnectMIDI4+)",
+                    id: "input-14",
+                    channel: 1
+                })
+            );
+            var blazingBaton = new BlazingBaton(demoConfig);
         </script>
     </body>
 </html>

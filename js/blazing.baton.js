@@ -13,40 +13,14 @@
  *
  * @todo: activate some build tool for those splitted javascript files
  *
- * @todo: provide a downloadable .html for offline usage
+ * @todo: provide a downloadable .html with inline js+css for offline usage
  *
  */
 function BlazingBaton(userOptions) {
-    var defaultOptions = {
-        inputNames: {
-            clock: [],
-            notes: []
-        },
-        inputCustomization: {
-            "all": {
-                color: "grey",
-                label: "Sum"
-            }
-        },
-        hotSpot: {
-            resolution: 24, // [clock ticks] (24 = 1/4 bar)
-            observationPeriod: 4, // [bar]
-            showMerged: true, // hotspot row with sum of all channels
-            maxChannelRows: 5,
-            lifeTime: 40, // [seconds]
-            ignoreChannel10: true // default MIDI channel for drums
-        },
-        time: {
-            totalTimeWarning: 15*60, // [seconds]
-            stopStartTreshold: 3000 // [miliseconds]
-        },
-        hideCursorAfter: 10, // [seconds]
-        noSleep: true,  // disable screensaver on incoming clock
-        bar16changeAnnounce: "and" // last part of huge count down
-    };
-    
+
     // merge default options with customized options
-    this.opts = this.mergeDeep(defaultOptions, userOptions);
+    //this.opts = this.mergeDeep(defaultOptions, userOptions);
+    this.opts = userOptions;
 
     this.fakeClockInterval = 21;
 
@@ -81,7 +55,7 @@ function BlazingBaton(userOptions) {
             resetterFirst: 0
         }
     };
-    
+
     this.hotSpot = {
         tickCounter: 0,
         ticksPerSegment: 0,
@@ -113,6 +87,7 @@ function BlazingBaton(userOptions) {
         bpm: "#bpm-value",
         time: "#time",
         bigOverlay: "#big-overlay",
+        piano: "#piano",
 
         progBar4: "#innerProgBar4",
         progBar16: "#innerProgBar16",
@@ -160,7 +135,7 @@ BlazingBaton.prototype.init = function() {
             that.notify("Your device does not support webMidi", 1511767451);
             return;
         }
-        that.opts.inputNames.clock.forEach(function(inputName){
+        that.opts.clockInputs.forEach(function(inputName){
             var input = that.webMidi.getInputByName(inputName);
             if(input === false) {
                 that.notify("Configured input '"+ inputName +"' not found", 1511767884);
@@ -176,17 +151,17 @@ BlazingBaton.prototype.init = function() {
                 "clock", "all", function(event) { that.handleEventMidiClock(event); }
             );
         });
-        that.opts.inputNames.notes.forEach(function(inputName){
-            var input = that.webMidi.getInputByName(inputName);
+        that.opts.noteInputs.forEach(function(noteInput){
+            var input = that.webMidi.getInputByName(noteInput.name);
             if(input === false) {
-                that.notify("Configured input '"+ inputName +"' not found", 1511767885);
+                that.notify("Configured input '"+ noteInput.name +"' not found", 1511767885);
                 return;
             }
             input.addListener(
-                "noteon", "all", function(event) { that.handleEventMidiNoteOn(event); }
+                "noteon", noteInput.channel, function(event) { that.handleEventMidiNoteOn(event); }
             );
             input.addListener(
-                "noteoff", "all", function(event) { that.handleEventMidiNoteOff(event); }
+                "noteoff", noteInput.channel, function(event) { that.handleEventMidiNoteOff(event); }
             );
         });
     });
@@ -200,15 +175,117 @@ BlazingBaton.prototype.init = function() {
     this.initDemo();
     this.initSettings();
 
-    if(this.opts.hotSpot.showMerged === true) {
-        document.querySelector(this.domSelectors.hotspotsContainer).appendChild(this.getChannelHotspotDom("all"));
-        this.inputs["all"] = {
-            visible: true,
-            activityScore: 0
-        }
-        this.recalculateInputActivity().reorderHotspotRows();
-    }
-    
+    this.showProgressBar16().showProgressBar4().showPiano().showHotspots().showTime().showTempo();
 };
 
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showProgressBar16
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showProgressBar16 = function() {
+    if(this.opts.show.progress16bars === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.progBar16).parentNode.classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showProgressBar4
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showProgressBar4 = function() {
+    if(this.opts.show.progress4bars === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.progBar4).parentNode.classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showPiano
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showPiano = function() {
+    if(this.opts.show.piano === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.piano).classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showPiano
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showTime = function() {
+    if(this.opts.show.time === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.time).classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showTempo
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showTempo = function() {
+    if(this.opts.show.tempo === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.bpm).parentNode.classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
+ * @method showHotspots
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showHotspots = function() {
+    if(this.opts.show.hotSpots === false) {
+        return this;
+    }
+    if(this.opts.hotSpot.showMerged === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.hotspotsContainer).appendChild(this.getChannelHotspotDom("all"));
+    this.inputs["all"] = {
+        visible: true,
+        activityScore: 0
+    }
+    this.recalculateInputActivity().reorderHotspotRows();
+    return this;
+}
 
