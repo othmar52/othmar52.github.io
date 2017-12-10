@@ -135,11 +135,12 @@ BlazingBaton.prototype.init = function() {
             that.notify("Your device does not support webMidi", 1511767451);
             return;
         }
-        that.opts.clockInputs.forEach(function(inputName){
-            var input = that.webMidi.getInputByName(inputName);
+        for(var idx in that.opts.clockInputs) {
+            if (!that.opts.clockInputs.hasOwnProperty(idx)) { continue; }
+            var input = that.webMidi.getInputByName(that.opts.clockInputs[idx].name);
             if(input === false) {
-                that.notify("Configured input '"+ inputName +"' not found", 1511767884);
-                return;
+                that.notify("Configured input '"+ that.opts.clockInputs[idx].name +"' not found", 1511767884);
+                continue;
             }
             input.addListener(
                 "start", "all", function(event) { that.handleEventMidiStart(event); }
@@ -150,20 +151,21 @@ BlazingBaton.prototype.init = function() {
             input.addListener(
                 "clock", "all", function(event) { that.handleEventMidiClock(event); }
             );
-        });
-        that.opts.noteInputs.forEach(function(noteInput){
-            var input = that.webMidi.getInputByName(noteInput.name);
+        }
+        for(var idx in that.opts.noteInputs) {
+            if (!that.opts.noteInputs.hasOwnProperty(idx) || idx === "all") { continue; }
+            var input = that.webMidi.getInputByName(that.opts.noteInputs[idx]);
             if(input === false) {
-                that.notify("Configured input '"+ noteInput.name +"' not found", 1511767885);
-                return;
+                that.notify("Configured input '"+ that.opts.noteInputs[idx].name +"' not found", 1511767885);
+                continue;
             }
             input.addListener(
-                "noteon", noteInput.channel, function(event) { that.handleEventMidiNoteOn(event); }
+                "noteon", that.opts.noteInputs[idx].channel, function(event) { that.handleEventMidiNoteOn(event); }
             );
             input.addListener(
-                "noteoff", noteInput.channel, function(event) { that.handleEventMidiNoteOff(event); }
+                "noteoff", that.opts.noteInputs[idx].channel, function(event) { that.handleEventMidiNoteOff(event); }
             );
-        });
+        }
     });
 
     // complete hotSpot tracking configuration

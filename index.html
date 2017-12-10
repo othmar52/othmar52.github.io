@@ -190,8 +190,12 @@
             // for option documentation see: https://github.com/othmar52/blazing-baton/
 
             var demoConfig = new BlazingConfig();
-
             demoConfig.addInput(
+                new ClockInput({
+                    name: "MIDIIN16 (iConnectMIDI4+)",
+                    id: "input-15"
+                })
+            ).addInput(
                 new NoteInput({
                     label: "JD-Xi D1",
                     color: "orange",

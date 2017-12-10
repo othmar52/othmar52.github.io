@@ -4,10 +4,16 @@
  * @static
  *
  */
-function ClockInput() {
+function ClockInput(conf) {
+    conf = (conf) || {};
     this.id = "";
     this.name = "";
     this.found = false;
+    for(var key in conf){
+        if(conf.hasOwnProperty(key) === true) {
+            this[key] = conf[key] ;
+        }
+    }
 }
 
 /**
@@ -26,7 +32,6 @@ function NoteInput(conf) {
     for(var key in conf){
         if(conf.hasOwnProperty(key) === true) {
             this[key] = conf[key] ;
-            console.log("sygdxcbfh", key, conf[key]);
         }
     }
     return this;
@@ -38,10 +43,8 @@ function NoteInput(conf) {
  *
  */
 function BlazingConfig() {
-    var sum = new NoteInput();
-    sum.label = "sum";
     this.noteInputs = [];
-    this.noteInputs.all = sum;
+    this.noteInputs.all = new NoteInput({label: "sum"});
     this.clockInputs = [];
     this.show = {
         time: true,
@@ -80,8 +83,18 @@ function BlazingConfig() {
  * 
  * @return {BlazingConfig} Returns the `BlazingConfig` object so methods can be chained.
  */
-BlazingConfig.prototype.addInput = function(noteInput) {
-    this.noteInputs["i" + noteInput.id + "-" + noteInput.channel] = noteInput;
-    this.noteInputs["i" + noteInput.id + "-" + noteInput.channel] = noteInput;
+BlazingConfig.prototype.addInput = function(midiInput) {
+    //console.log(midiInput.constructor.name);
+    switch(midiInput.constructor.name) {
+        case "NoteInput":
+            this.noteInputs["i" + midiInput.id + "-" + midiInput.channel] = midiInput;
+            break;
+        case "ClockInput":
+            this.clockInputs["i" + midiInput.id] = midiInput;
+            break;
+        default:
+            console.log("invalid input");
+            break;
+    }
     return this;
 };
