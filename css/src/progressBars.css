@@ -1,0 +1,41 @@
+
+.progBar {
+	height: 13vh;
+	position: relative;
+	background-color: gray;
+	background: #313135;
+}
+
+#progBar4 {
+	height: 13px;
+	margin-top: 0.35vh;
+}
+
+
+.innerProgBar {
+	height: 100%;
+	background: #b5b5c4;
+	width: 0;
+}
+
+#innerProgBar16 {
+	height: 100%;
+	width: 0;
+}
+
+.progBarDarker {
+	background-color: #202021;
+}
+
+.progBarDarker .innerProgBar {
+	background-color: #54545a;
+}
+.progBarGrid {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background-image: linear-gradient(90deg, transparent 99.3%, #141414 0.7%);
+	background-size: 25% 25%;
+
+}

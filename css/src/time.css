@@ -1,0 +1,14 @@
+
+#time {
+	font-size: 130px;
+}
+
+#time.info {
+	color: white;
+	font-weight: 600;
+}
+
+#time.danger {
+	color: #FF5050;
+	font-weight: 800;
+}
