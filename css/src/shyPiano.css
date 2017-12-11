@@ -93,47 +93,47 @@
 /* outer circle in full channel color, inner circle white */
 .shypiano.grey .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #BBBBBB 80.01%, #BBBBBB 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #BBBBBB 80.01%, #BBBBBB 99%, transparent 100%
 	);
 }
 .shypiano.pink .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #F8289E 80.01%, #F8289E 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #F8289E 80.01%, #F8289E 99%, transparent 100%
 	);
 }
 .shypiano.cyan .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #00E5E5 80.01%, #00E5E5 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #00E5E5 80.01%, #00E5E5 99%, transparent 100%
 	);
 }
 .shypiano.violet .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #9932CC 80.01%, #9932CC 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #9932CC 80.01%, #9932CC 99%, transparent 100%
 	);
 }
 .shypiano.red .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF5050 80.01%, #FF5050 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF5050 80.01%, #FF5050 99%, transparent 100%
 	);
 }
 .shypiano.orange .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF9C01 80.01%, #FF9C01 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF9C01 80.01%, #FF9C01 99%, transparent 100%
 	);
 }
 .shypiano.green .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #3BBB2F 80.01%, #3BBB2F 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #3BBB2F 80.01%, #3BBB2F 99%, transparent 100%
 	);
 }
 .shypiano.blue .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #5487F4 80.01%, #5487F4 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #5487F4 80.01%, #5487F4 99%, transparent 100%
 	);
 }
 .shypiano.yellow .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #EFFE4B 80.01%, #EFFE4B 99.9%, transparent 100%
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #EFFE4B 80.01%, #EFFE4B 99%, transparent 100%
 	);
 }
 
@@ -142,46 +142,46 @@
 /* outer circle in full channel color, inner circle dark */
 .shypiano.grey .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #BBBBBB 80.01%, #BBBBBB 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #BBBBBB 80.01%, #BBBBBB 99%, transparent 100%
 	);
 }
 .shypiano.pink .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #F8289E 80.01%, #F8289E 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #F8289E 80.01%, #F8289E 99%, transparent 100%
 	);
 }
 .shypiano.cyan .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #00E5E5 80.01%, #00E5E5 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #00E5E5 80.01%, #00E5E5 99%, transparent 100%
 	);
 }
 .shypiano.violet .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #9932CC 80.01%, #9932CC 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #9932CC 80.01%, #9932CC 99%, transparent 100%
 	);
 }
 .shypiano.red .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #FF5050 80.01%, #FF5050 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #FF5050 80.01%, #FF5050 99%, transparent 100%
 	);
 }
 .shypiano.orange .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #FF9C01 80.01%, #FF9C01 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #FF9C01 80.01%, #FF9C01 99%, transparent 100%
 	);
 }
 .shypiano.green .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #3BBB2F 80.01%, #3BBB2F 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #3BBB2F 80.01%, #3BBB2F 99%, transparent 100%
 	);
 }
 .shypiano.blue .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #5487F4 80.01%, #5487F4 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #5487F4 80.01%, #5487F4 99%, transparent 100%
 	);
 }
 .shypiano.yellow .black .noteon {
 	background-image: radial-gradient(
-		circle closest-side, #141414 0%, #141414 80%, #EFFE4B 80.01%, #EFFE4B 99.9%, transparent 100%
+		circle closest-side, #141414 0%, #141414 80%, #EFFE4B 80.01%, #EFFE4B 99%, transparent 100%
 	);
 }
