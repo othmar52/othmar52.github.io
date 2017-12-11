@@ -29,10 +29,10 @@ a {
 
 .bottom-grid {
 	display: grid;
-	grid-template-columns:  82% 18%;
+	grid-template-columns:  77% 23%;
 }
 .col-piano {
-	padding: 2vw 12vw 0 20vw;
+	padding: 2vw 2vw 0 20vw;
 }
 
 .col-numbers {

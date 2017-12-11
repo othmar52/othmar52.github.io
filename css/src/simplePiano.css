@@ -2,9 +2,12 @@
 .simplepiano {
 	height:100px;
 	width:100%;
-	margin: 10px 0 0 0;
 	padding: 0;
 	position:relative; 
+}
+
+.simplepiano.common {
+	margin: 2vh 0 5vh 0;
 }
 
 .simplepiano li {
@@ -55,35 +58,9 @@
 	background: #b5b5c4;
 }
 
-
-
-
 .simplepiano .CS { left: 9.2%; }
 .simplepiano .DS { left: 25.2%; }
 .simplepiano .FS { left: 51.7%; }
 .simplepiano .GS { left: 67.2%; }
 .simplepiano .AS { left: 82.6%; }
-
-
-
-/* channel labels in channel color */
-.simplepiano:before {
-	content: attr(title);
-	position:absolute;
-	display: block;
-	left: -40%;
-	top: 30px;
-	text-transform: uppercase;
-	font-size: 40px;
-}
-
-.simplepiano.grey:before {   color: #777777; }
-.simplepiano.pink:before {   color: #580D38; }
-.simplepiano.cyan:before {   color: #006565; }
-.simplepiano.violet:before { color: #3B134E; }
-.simplepiano.red:before {    color: #4C1818; }
-.simplepiano.orange:before { color: #7B6137; }
-.simplepiano.green:before {  color: #174612; }
-.simplepiano.blue:before {   color: #14357D; }
-.simplepiano.yellow:before { color: #4B5018; }
 

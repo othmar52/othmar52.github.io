@@ -69,7 +69,7 @@ function BlazingConfig() {
         totalTimeWarning: 15*60, // [seconds]
         stopStartTreshold: 3000 // [miliseconds]
     };
-    this.hideCursorAfter = 10; // [seconds]
+    this.hideCursorAfter = 3; // [seconds]
     this.noSleep = true;  // disable screensaver on incoming clock
     this.bar16changeAnnounce = "and"; // last part of huge count down
 }

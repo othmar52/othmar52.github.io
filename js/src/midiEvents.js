@@ -15,6 +15,7 @@ BlazingBaton.prototype.handleEventMidiStart = function(event) {
     this.status.multiStop.resetterFirst = 0;
     this.status.multiStop.resetterCount = 0;
     document.querySelector(this.domSelectors.time).classList.remove("danger", "info");
+    document.querySelector(this.domSelectors.clockHint).classList.add("hidden");
 
     // TODO: multiple start events without stop should not reset clock
     // TODO: stop event without running clock should not colorize clock
@@ -29,6 +30,7 @@ BlazingBaton.prototype.handleEventMidiStop = function(event) {
         this.status.fake.active = true;
         document.querySelector(this.domSelectors.time).classList.add("danger");
     }
+    document.querySelector(this.domSelectors.clockHint).classList.remove("hidden");
 
     this.handleMultiStop();
 

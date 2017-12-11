@@ -39,3 +39,18 @@
 	background-size: 25% 25%;
 
 }
+
+
+#clockHint {
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	z-index: 3;
+	top: 39%;
+	opacity: 0.5;
+}
+
+#clockHint span {
+	background: black;
+	padding: 1vh 3vw;
+}

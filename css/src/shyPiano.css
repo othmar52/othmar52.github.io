@@ -1,6 +1,9 @@
 
 /* shypiano for hotspots */
 
+.shypiano {
+	margin: 2vh 0 0 0;
+}
 
 .shypiano li {
 	display: flex;
@@ -13,7 +16,7 @@
 .shypiano .white {
 	height:60%;
 	width: 9%;
-	top: 10%;
+	top: 22%;
 	margin: 2.64285714285%; 
 }
 
@@ -33,6 +36,28 @@
 .shypiano .FS { left: 52.6%; }
 .shypiano .GS { left: 67%; }
 .shypiano .AS { left: 81.4%; }
+
+/* channel labels in channel color */
+.shypiano:before {
+	content: attr(title);
+	position:absolute;
+	display: block;
+	left: -16vw;
+	top: 30px;
+	text-transform: uppercase;
+	font-size: 2.3vw;
+}
+
+.shypiano.grey:before {   color: #777777; }
+.shypiano.pink:before {   color: #580D38; }
+.shypiano.cyan:before {   color: #006565; }
+.shypiano.violet:before { color: #3B134E; }
+.shypiano.red:before {    color: #4C1818; }
+.shypiano.orange:before { color: #7B6137; }
+.shypiano.green:before {  color: #174612; }
+.shypiano.blue:before {   color: #14357D; }
+.shypiano.yellow:before { color: #4B5018; }
+
 
 
 /* hotness in channel color */

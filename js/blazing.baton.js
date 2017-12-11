@@ -83,6 +83,7 @@ function BlazingBaton(userOptions) {
         time: "#time",
         bigOverlay: "#big-overlay",
         piano: "#piano",
+        clockHint: "#clockHint",
 
         progBar4: "#innerProgBar4",
         progBar16: "#innerProgBar16",
