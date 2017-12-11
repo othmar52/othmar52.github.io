@@ -1,13 +1,10 @@
 
-/* simple css piano: https://codepen.io/zastrow/pen/oDBki */
 .simplepiano {
 	height:100px;
 	width:100%;
 	margin: 10px 0 0 0;
 	padding: 0;
 	position:relative; 
-	border:1px solid #160801;
-	background: #111;
 }
 
 .simplepiano li {
@@ -18,53 +15,58 @@
 	float:left;
 }
 
+.simplepiano div {
+	height: 100%;
+	width: 100%;
+}
+
 .simplepiano .white {
 	height: 100%;
 	width:14.2857142857%;
 	z-index: 1;
-	border-left: 1px solid #bbb;
-	border-bottom: 1px solid #bbb;
-	border-top: 1px solid #bbb;
-}
-
-.simplepiano .white.active {
-	border-top: 1px solid #777;
-	border-left: 1px solid #999;
-	border-bottom: 1px solid #999;
-	background: #555;
 }
 
 .simplepiano .black {
 	height:60%;
 	width: 9%;
-	margin:0 0 0 -1em;
 	z-index:2;
 	position: absolute;
-	border: 2px solid #bbb;
-	border-radius:0 0 3px 3px;
-	background: #111;
 }
 
-.black.active {
-	background: #555;
+.simplepiano.common .white {
+	border-left: 0.17vw solid #141414;
+	border-bottom: 0.17vw solid #141414;
+	border-top: 0.17vw solid #141414;
+	background: #313135;
 }
 
-.simplepiano .white div,
-.simplepiano .black div {
-	height: 100%;
-	width: 100%;
+.simplepiano.common .white.active {
+	background: #65656c;
+}
+
+.simplepiano.common .black {
+	border: 0.17vw  solid #141414;
+	background: #27272a;
+}
+
+.simplepiano.common .B { border-right: 0.17vw solid #141414; }
+
+.simplepiano.common .black.active {
+	background: #b5b5c4;
 }
 
 
-.simplepiano .CS { left: 12%; }
-.simplepiano .DS { left: 27%; }
-.simplepiano .FS { left: 55%; }
-.simplepiano .GS { left: 70%; }
-.simplepiano .AS { left: 84%; }
-
-.simplepiano .B { border-right: 1px solid #bbb; }
 
 
+.simplepiano .CS { left: 9.2%; }
+.simplepiano .DS { left: 25.2%; }
+.simplepiano .FS { left: 51.7%; }
+.simplepiano .GS { left: 67.2%; }
+.simplepiano .AS { left: 82.6%; }
+
+
+
+/* channel labels in channel color */
 .simplepiano:before {
 	content: attr(title);
 	position:absolute;
@@ -87,26 +89,55 @@
 
 
 
-.simplepiano.shy,
-.simplepiano.shy .white,
-.simplepiano.shy .black,
-.simplepiano.shy .white.active,
-.simplepiano.shy .black.active {
-	border: none;
-	background: none;
-	box-shadoXXXw:none;
+/* shypiano for hotspots */
+
+
+.shypiano li {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.simplepiano.shy .white {
+
+/* force same size of black and white keys */
+.shypiano .white {
 	height:60%;
 	width: 9%;
-	top: 40%;
+	top: 10%;
 	margin: 2.64285714285%; 
 }
 
+/* force a square shape to avoid elipsis */
+.shypiano div{
+	position: absolute;
+	padding-bottom: 80%;
+	width: 80%;
+	padding-left: 40%;
+	padding-right: 40%;
+	height: 80%;
+}
+
+/* force same distance between white and black spots */
+.shypiano .CS { left: 9.9%; }
+.shypiano .DS { left: 24.1%; }
+.shypiano .FS { left: 52.6%; }
+.shypiano .GS { left: 67%; }
+.shypiano .AS { left: 81.4%; }
 
 
-.shy div {
+/* hotness in channel color */
+.shypiano.grey   .hotness { background-image: radial-gradient( circle closest-side, #BBBBBB 70%,  transparent 100% ); }
+.shypiano.pink   .hotness { background-image: radial-gradient( circle closest-side, #F8289E 70%,  transparent 100% ); }
+.shypiano.cyan   .hotness { background-image: radial-gradient( circle closest-side, #00E5E5 70%,  transparent 100% ); }
+.shypiano.violet .hotness { background-image: radial-gradient( circle closest-side, #9932CC 70%,  transparent 100% ); }
+.shypiano.red    .hotness { background-image: radial-gradient( circle closest-side, #FF5050 70%,  transparent 100% ); }
+.shypiano.orange .hotness { background-image: radial-gradient( circle closest-side, #FF9C01 70%,  transparent 100% ); }
+.shypiano.green  .hotness { background-image: radial-gradient( circle closest-side, #3BBB2F 70%,  transparent 100% ); }
+.shypiano.blue   .hotness { background-image: radial-gradient( circle closest-side, #5487F4 70%,  transparent 100% ); }
+.shypiano.yellow .hotness { background-image: radial-gradient( circle closest-side, #EFFE4B 70%,  transparent 100% ); }
+
+/* tiny transition for hotness */
+.shypiano .hotness {
 	opacity : 0.05;
 	-webkit-transition: opacity 0.3s ease-in-out;
 	-moz-transition: opacity 0.3s ease-in-out;
@@ -115,66 +146,107 @@
 	transition: opacity 0.3s ease-in-out;
 }
 
-.shy.grey   div { background-image: radial-gradient( circle closest-side, #BBBBBB, #BBBBBB, transparent ); }
-.shy.pink   div { background-image: radial-gradient( circle closest-side, #F8289E, #F8289E, transparent ); }
-.shy.cyan   div { background-image: radial-gradient( circle closest-side, #00E5E5, #00E5E5, transparent ); }
-.shy.violet div { background-image: radial-gradient( circle closest-side, #9932CC, #9932CC, transparent ); }
-.shy.red    div { background-image: radial-gradient( circle closest-side, #FF5050, #FF5050, transparent ); }
-.shy.orange div { background-image: radial-gradient( circle closest-side, #FF9C01, #FF9C01, transparent ); }
-.shy.green  div { background-image: radial-gradient( circle closest-side, #3BBB2F, #3BBB2F, transparent ); }
-.shy.blue   div { background-image: radial-gradient( circle closest-side, #5487F4, #5487F4, transparent ); }
-.shy.yellow div { background-image: radial-gradient( circle closest-side, #EFFE4B, #EFFE4B, transparent ); }
-
-
-
-.simplepiano.shy .white.active,
-.simplepiano.shy .black.active,
-.simplepiano.shy2 .white.active,
-.simplepiano.shy2 .black.active {
-	border: 2px solid #BBB;
-	border-radius: 50%;
+/* active note state */
+.shypiano .noteon {
+	visibility: hidden;
+}
+.shypiano .active .noteon {
+	visibility: visible;
 }
 
-#hotspots-all .white.active,
-#hotspots-all .black.active {
-	border: none;
-	border-radius: 0;
+/* active note state for white keys */
+/* outer circle in full channel color, inner circle white */
+.shypiano.grey .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #BBBBBB 80.01%, #BBBBBB 99.9%, transparent 100%
+	);
+}
+.shypiano.pink .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #F8289E 80.01%, #F8289E 99.9%, transparent 100%
+	);
+}
+.shypiano.cyan .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #00E5E5 80.01%, #00E5E5 99.9%, transparent 100%
+	);
+}
+.shypiano.violet .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #9932CC 80.01%, #9932CC 99.9%, transparent 100%
+	);
+}
+.shypiano.red .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF5050 80.01%, #FF5050 99.9%, transparent 100%
+	);
+}
+.shypiano.orange .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #FF9C01 80.01%, #FF9C01 99.9%, transparent 100%
+	);
+}
+.shypiano.green .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #3BBB2F 80.01%, #3BBB2F 99.9%, transparent 100%
+	);
+}
+.shypiano.blue .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #5487F4 80.01%, #5487F4 99.9%, transparent 100%
+	);
+}
+.shypiano.yellow .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #b5b5c4 0%, #b5b5c4 80%, #EFFE4B 80.01%, #EFFE4B 99.9%, transparent 100%
+	);
 }
 
 
-.simplepiano.shy2 .white.active,
-.simplepiano.shy2 .black.active {
-	border-radius: 0;
+/* active note state for black keys */
+/* outer circle in full channel color, inner circle dark */
+.shypiano.grey .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #BBBBBB 80.01%, #BBBBBB 99.9%, transparent 100%
+	);
 }
-
-.simplepiano.shy2 .white {
-	border-left: 1px solid #444;
-	border-bottom: 1px solid #444;
-	border-top: 1px solid #444;
+.shypiano.pink .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #F8289E 80.01%, #F8289E 99.9%, transparent 100%
+	);
 }
-
-.simplepiano.shy2 .white.active {
-	border-top: 1px solid #777;
-	border-left: 1px solid #999;
-	border-bottom: 1px solid #999;
+.shypiano.cyan .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #00E5E5 80.01%, #00E5E5 99.9%, transparent 100%
+	);
 }
-
-.simplepiano.shy2 .black {
-	border: 1px solid #444;
+.shypiano.violet .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #9932CC 80.01%, #9932CC 99.9%, transparent 100%
+	);
 }
-
-.simplepiano.shy2 .B { border-right: 1px solid #444; }
-
-.shy2 div {
-	opacity : 0.05;
+.shypiano.red .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #FF5050 80.01%, #FF5050 99.9%, transparent 100%
+	);
 }
-.shy2.grey   div { background-image: radial-gradient( circle closest-side, #BBBBBB, #BBBBBB, #BBBBBB, transparent ); }
-.shy2.pink   div { background-image: radial-gradient( circle closest-side, #F8289E, transparent ); }
-.shy2.cyan   div { background-image: radial-gradient( circle closest-side, #00E5E5, transparent ); }
-.shy2.violet div { background-image: radial-gradient( circle closest-side, #9932CC, transparent ); }
-.shy2.red    div { background-image: radial-gradient( circle closest-side, #FF5050, transparent ); }
-.shy2.orange div { background-image: radial-gradient( circle closest-side, #FF9C01, transparent ); }
-.shy2.green  div { background-image: radial-gradient( circle closest-side, #3BBB2F, transparent ); }
-.shy2.blue   div { background-image: radial-gradient( circle closest-side, #5487F4, transparent ); }
-.shy2.yellow div { background-image: radial-gradient( circle closest-side, #EFFE4B, transparent ); }
-
+.shypiano.orange .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #FF9C01 80.01%, #FF9C01 99.9%, transparent 100%
+	);
+}
+.shypiano.green .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #3BBB2F 80.01%, #3BBB2F 99.9%, transparent 100%
+	);
+}
+.shypiano.blue .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #5487F4 80.01%, #5487F4 99.9%, transparent 100%
+	);
+}
+.shypiano.yellow .black .noteon {
+	background-image: radial-gradient(
+		circle closest-side, #141414 0%, #141414 80%, #EFFE4B 80.01%, #EFFE4B 99.9%, transparent 100%
+	);
+}

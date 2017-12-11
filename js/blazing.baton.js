@@ -27,11 +27,6 @@ function BlazingBaton(userOptions) {
     // TODO: choose random colors for unconfigured note events
     this.colors = ["grey", "pink", "cyan", "violet", "red", "orange", "green", "blue", "yellow"];
 
-    // TODO: remove this as soon as we have a graphic decision
-    // shy | shy2
-    this.tempShyClass = "shy";
-
-
     this.status = {
         real: {
             playing: false,

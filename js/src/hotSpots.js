@@ -208,13 +208,18 @@ BlazingBaton.prototype.getChannelHotspotDom = function(inputId) {
 
     var ul = document.createElement("ul");
     ul.id = "hotspots-"+ inputId;
-    ul.classList.add("simplepiano", this.tempShyClass, colorClass);
+    ul.classList.add("simplepiano", "shypiano", colorClass);
     ul.setAttribute("title", label);
     for (var key in keyConf) {
         var li = document.createElement("li");
         li.classList.add(key, keyConf[key]);
         li.setAttribute("data-keyname", key);
-        li.appendChild(document.createElement("div"));
+        var hotness = document.createElement("div");
+        hotness.classList.add("hotness")
+        li.appendChild(hotness);
+        var noteon = document.createElement("div");
+        noteon.classList.add("noteon")
+        li.appendChild(noteon);
         ul.appendChild(li);
     }
     return ul;
