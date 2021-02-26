@@ -1,0 +1,9 @@
+Source,,Cable,Colors,Target,,Notes
+MioXL (back),DIN 4 OUT,black,,MioXL (rear),DIN 1 IN,Bridge to share config over different clock sources
+LMK4+,DIN OUT,ocean,yellow,MioXL (rear),DIN 2 IN,
+Soundbite Micro,DIN OUT,gray;red,yellow,MioXL (rear),DIN 3 IN,Audio to MIDI clock converter
+Linnstrument,DIN OUT,black,blue;blue,MioXL (rear),DIN 4 IN,
+ioDock/iPad,DIN OUT,,,MioXL (rear),DIN 5 IN,
+MIDI Looper 1 (left),DIN OUT,,,MioXL (rear),DIN 6 IN,"incl. Keystep, Zaquencer and 3 x MIDI Looper"
+WIDI Master,DIN OUT,,,MioXL (front),DIN 7 IN,clock input via bluetooth from ICM4+
+,,,,MioXL (front),DIN 8 IN,

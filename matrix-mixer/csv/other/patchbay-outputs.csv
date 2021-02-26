@@ -1,0 +1,11 @@
+Ui24R,Colors,PB A,PB B,Colors,Target,Notes
+AUX 1,blue;red;red,A 1,B 1,,Endpoint STEREO 1 L,digitally wired to 2nd Ui24R IN 11
+AUX 2,blue;green;yellow,A 2,B 2,,Endpoint STEREO 1 R,digitally wired to 2nd Ui24R IN 12
+AUX 3,blue;green;red,A 3,B 3,,Endpoint STEREO 2 L,digitally wired to 2nd Ui24R IN 13
+AUX 4,blue;yellow;white,A 4,B 4,,Endpoint STEREO 2 R,digitally wired to 2nd Ui24R IN 14
+AUX 5,blue;white;green,A 5,B 5,,Endpoint STEREO 3 L,digitally wired to 2nd Ui24R IN 15
+AUX 6,blue;yellow;yellow,A 6,B 6,,Endpoint STEREO 3 R,digitally wired to 2nd Ui24R IN 16
+AUX 7,blue;white;white,A 7,B 7,,Endpoint MONO,digitally wired to 2nd Ui24R IN 17
+AUX 8,blue;black;red,A 8,B 8,,RMX-1000 IN L,
+MASTER L,blue;black;black,A 9,B 9,,RC-505 IN L,MASTER L internally routed to AUX 9
+MASTER R,blue;green;green,A 10,B 10,blue,Digitakt IN L,MASTER R internally routed to AUX 10

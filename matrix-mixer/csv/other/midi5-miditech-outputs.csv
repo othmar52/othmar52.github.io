@@ -1,0 +1,5 @@
+Source,,Cable,Colors,Target,,Notes
+Miditech Thru 4,DIN OUT 1,black,blue;blue;blue,Arduino,DIN IN,Hardware Blazing Baton
+Miditech Thru 4,DIN OUT 2,black,yellow;yellow;yellow,Linnstrument,DIN IN,
+Miditech Thru 4,DIN OUT 3,black,blue;red,Keystep DIN IN,DIN IN,
+Miditech Thru 4,DIN OUT 4,blue;black,green;black,RC-505,DIN IN,
