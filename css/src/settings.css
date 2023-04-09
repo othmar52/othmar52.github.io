@@ -27,3 +27,110 @@
 	display: grid;
 	grid-template-columns:  50% 50%;
 }
+
+
+#input-config li {
+	list-style-type: none;
+}
+
+input[type=text], select,input[type=checkbox] {
+	background-color: #313135;
+	color: #FFF;
+	border: none;
+	font-size: 1em;
+	padding: 0.2em;
+}
+
+#input-config option {
+	color: black;
+}
+
+option[value=grey]   { background-color: #BBBBBB; }
+option[value=pink]   { background-color: #F8289E; }
+option[value=cyan]   { background-color: #00E5E5; }
+option[value=violet] { background-color: #9932CC; }
+option[value=red]	{ background-color: #FF5050; }
+option[value=orange] { background-color: #FF9C01; }
+option[value=green]  { background-color: #3BBB2F; }
+option[value=blue]   { background-color: #5487F4; }
+option[value=yellow] { background-color: #EFFE4B; }
+
+
+input[type=text] {
+	text-align: center;
+}
+
+/* thanks to https://paulund.co.uk/style-checkboxes-with-css */
+input[type=checkbox] {
+	display: none;
+}
+
+.checkbox {
+	width: 90px;
+	height: 26px;
+	background: #333;
+	margin: 0px 0px;
+
+	border-radius: 40px;
+	position: relative;
+	display: inline-block;
+	top: 5px;
+}
+
+.checkbox:before {
+	content: 'YES';
+	position: absolute;
+	top: 4px;
+	left: 13px;
+	height: 2px;
+	color: #3BBB2F;
+	font-size: 13px;
+}
+
+.checkbox:after {
+	content: 'NO';
+	position: absolute;
+	top: 4px;
+	left: 60px;
+	height: 2px;
+	color: #EEE;
+	font-size: 13px;
+}
+
+input[type=radio]:checked {
+	content: "\2022";
+	color: #3BBB2F;
+	font-size: 30px;
+	text-align: center;
+	line-height: 18px;
+}
+
+.checkbox .label-handle {
+	display: block;
+	width: 40px;
+	height: 20px;
+	border-radius: 50px;
+
+	transition: all .5s ease;
+	cursor: pointer;
+	position: absolute;
+	top: 3px;
+	z-index: 1;
+	left: 3px;
+	background: #ddd;
+}
+
+.checkbox input[type=checkbox]:checked + .label-handle {
+	left: 46px;
+	background: #3BBB2F;
+}
+
+.tooltip {
+	width: 30px;
+	height: 30px;
+	border-radius: 50px;
+	cursor: pointer;
+	background: #333;
+	display: inline-block;
+	text-align: center;
+}

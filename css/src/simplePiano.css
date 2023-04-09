@@ -10,6 +10,24 @@
 	margin: 2vh 0 5vh 0;
 }
 
+.common .white:before {
+	content: "";
+	color: #444;
+	position: relative;
+	bottom: -2em;
+	left: 3vw;
+	font-size: 2em;
+	font-weight: 800;
+}
+
+.common .C:before { content: "C"; }
+.common .D:before { content: "D"; }
+.common .E:before { content: "E"; }
+.common .F:before { content: "F"; }
+.common .G:before { content: "G"; }
+.common .A:before { content: "A"; }
+.common .B:before { content: "H"; }
+
 .simplepiano li {
 	margin:0;
 	padding:0;

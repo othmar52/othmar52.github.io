@@ -1,14 +1,30 @@
 
 .progBar {
-	height: 13vh;
+	height: 9vh;
 	position: relative;
 	background-color: gray;
 	background: #313135;
 }
 
+.innerProgBar.green {
+	background:#9dc19e;
+}
+
+.innerProgBar.red {
+	background-color: #FF5050;
+}
+
+.innerProgBar.orange {
+	background-color: #FF9C01;
+}
+
 #progBar4 {
 	height: 13px;
 	margin-top: 0.35vh;
+}
+
+#progBar64 {
+	height: 3vh;
 }
 
 
@@ -19,6 +35,12 @@
 }
 
 #innerProgBar16 {
+	height: 100%;
+	width: 0;
+	margin-top: 0.35vh;
+}
+
+#innerProgBar64 {
 	height: 100%;
 	width: 0;
 }
@@ -54,3 +76,40 @@
 	background: black;
 	padding: 1vh 3vw;
 }
+
+
+/* Box shadow styling for button pulse effect  - currently disabled */
+
+.pulsate {
+    box-shadow: 0px 0px 8px 12px rgba(204, 204, 204, 0.2), 0px 0px 2px 4px rgba(184, 184, 184, 0.23);
+}
+
+#pulsator {
+	display: none;
+	position: absolute;
+	top: 250px;
+	left: 110px;
+	width: 50px;
+	height: 50px;
+	outline: 0;
+	border-radius: 50%;
+	border: 0px solid #fff;
+	background-color: #313135;
+	color: #fff;
+	font-size: 14px;
+	transition: all 0.2s ease-out;
+}
+
+#numerator {
+	font-size: 4vw;
+	width: 17%;
+	left: 0;
+	position: absolute;
+	text-align: center;
+	top: 22vh;
+}
+
+#num3 {
+	color: white;
+}
+

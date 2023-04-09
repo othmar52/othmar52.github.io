@@ -39,9 +39,11 @@ BlazingBaton.prototype.handleEventMidiStop = function(event) {
     this.hotSpot.tickCounter = 0;
     this.bar4Counter = 0;
     this.bar16Counter = 0;
+    this.bar64Counter = 0;
 
     document.querySelector(this.domSelectors.progBar4).style.width = "0";
     document.querySelector(this.domSelectors.progBar16).style.width = "0";
+    document.querySelector(this.domSelectors.progBar64).style.width = "0";
 };
 
 
@@ -54,8 +56,10 @@ BlazingBaton.prototype.handleEventMidiClock = function(event) {
     this.hotSpot.tickCounter++;
     this.bar4Counter++;
     this.bar16Counter++;
+    this.bar64Counter++;
     this.status.real.clockEventsCounter++;
     this.checkBigCountDown();
+    this.checkNumerator();
 
     if(this.hotSpot.tickCounter === this.hotSpot.ticksPerSegment) {
         this.hotSpot.tickCounter = 0;
@@ -74,6 +78,9 @@ BlazingBaton.prototype.handleEventMidiClock = function(event) {
     if(this.bar16Counter === this.bar16MaxClockEvents) {
         this.bar16Counter = 0;
     }
+    if(this.bar64Counter === this.bar64MaxClockEvents) {
+        this.bar64Counter = 0;
+    }
 
     // TODO: replace with css transition
     var bar4Percent = this.bar4Counter*(100/this.bar4MaxClockEvents);
@@ -82,16 +89,59 @@ BlazingBaton.prototype.handleEventMidiClock = function(event) {
     var bar16Percent = this.bar16Counter*(100/this.bar16MaxClockEvents);
     document.querySelector(this.domSelectors.progBar16).style.width = bar16Percent+"%";
 
+    var bar64Percent = this.bar64Counter*(100/this.bar64MaxClockEvents);
+    document.querySelector(this.domSelectors.progBar64).style.width = bar64Percent+"%";
+
+
+
+    // colorize bar16
+    if(this.bar64Counter === (this.bar64MaxClockEvents - this.bar16MaxClockEvents) ) {
+        this.toggleBar16Classes("green", "red");
+    }
+    if(this.bar64Counter === (this.bar64MaxClockEvents - (this.bar16MaxClockEvents/2) ) ) {
+        this.toggleBar16Classes("red", "orange");
+    }
+    if(this.bar64Counter === 1 ) {
+        this.toggleBar16Classes("orange", "green");
+    }
 
     this.checkTempoRefresh();
 
 };
+
+/**
+ * toggle color classes of bar16 DOM node
+ *
+ * @method toggleBar16Classes
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.toggleBar16Classes = function(removeClass, addClass) {
+    var bar16 = document.querySelector(this.domSelectors.progBar16);
+    bar16.classList.remove(removeClass);
+    bar16.classList.add(addClass);
+    return this;
+}
 
 BlazingBaton.prototype.handleEventMidiNoteOn = function(event) {
     if(typeof event.note.octave === "undefined") {
         // for some reason one of my devices permanently fires a noteoff with undefined octave
         return;
     }
+
+    // check if we have to ignore the event
+    var noteTargetKey = this.noteEventTargetMapping["i"+event.target.id + "-" + event.channel];
+    if(typeof noteTargetKey === "undefined") {
+        return;
+    }
+    // make sure the event target exists
+    var noteTarget = this.noteEventTargets[noteTargetKey];
+    if(typeof noteTarget === "undefined") {
+        return;
+    }
+
     if(this.opts.hotSpot.ignoreChannel10 === true && event.channel === 10) {
         // skip drum channel
         return;
@@ -100,19 +150,27 @@ BlazingBaton.prototype.handleEventMidiNoteOn = function(event) {
     event.note.name = event.note.name.replace("#", "S");
 
     // TODO: what to do if we already have this note open ?
+	var _channel = ((noteTarget.omni === true) ? "omni" : event.channel);
     this.openNotes.push({
-        id: event.target.id + "-" + event.channel,
+        id: event.target.id + "-" + _channel,
         input: event.target.id,
-        channel: event.channel,
+        channel: _channel,
         note: event.note.name,
+        number: event.note.number,
         type: "on",
         segment: this.hotSpot.segment.current,
         start: Date.now(),
         stop: null,
         playtime: null
     });
-    this.ensureHotspotRowExists(event.target.id + "-" + event.channel);
+    this.ensureHotspotRowExists(event.target.id + "-" + _channel);
     this.checkPianoHighlight();
+
+    // temporary hack for fullPiano screen recording
+    var $fullPiano;
+    if($fullPiano = this.getFullPianoKey(event.note.number)) {
+        $fullPiano.classList.add("pressed");
+    }
 };
 
 BlazingBaton.prototype.handleEventMidiNoteOff = function(event) {
@@ -121,10 +179,18 @@ BlazingBaton.prototype.handleEventMidiNoteOff = function(event) {
         // for some reason one of my devices permanently fires a noteoff with undefined octave
         return;
     }
-    if(this.opts.hotSpot.ignoreChannel10 === true && event.channel === 10) {
-        // skip drum channel
+
+    // check if we have to ignore the event
+    var noteTargetKey = this.noteEventTargetMapping["i"+event.target.id + "-" + event.channel];
+    if(typeof noteTargetKey === "undefined") {
         return;
     }
+    // make sure the event target exists
+    var noteTarget = this.noteEventTargets[noteTargetKey];
+    if(typeof noteTarget === "undefined") {
+        return;
+    }
+
     // avoid special char in js objects
     event.note.name = event.note.name.replace("#", "S");
 
@@ -132,10 +198,10 @@ BlazingBaton.prototype.handleEventMidiNoteOff = function(event) {
     var i = this.openNotes.length;
 
     while(i--) {
-        if(this.openNotes[i].note !== event.note.name) {
+        if(this.openNotes[i].number !== event.note.number) {
             continue;
         }
-        if(this.openNotes[i].id !== event.target.id + "-" + event.channel) {
+        if(this.openNotes[i].id !== event.target.id + "-" + ((noteTarget.omni === true) ? "omni" : event.channel)) {
             continue;
         }
         var keyToTransfer = this.openNotes.splice(i, 1);
@@ -145,4 +211,14 @@ BlazingBaton.prototype.handleEventMidiNoteOff = function(event) {
         break;
     }
     this.checkPianoHighlight();
+
+    // temporary hack for fullPiano screen recording
+    var $fullPiano;
+    if($fullPiano = this.getFullPianoKey(event.note.number)) {
+        $fullPiano.classList.remove("pressed");
+    }
+};
+
+BlazingBaton.prototype.getFullPianoKey = function(noteNumber) {
+    return document.querySelector('#fullpiano li[data-notenumber="'+ noteNumber +'"]');
 };

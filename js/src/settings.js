@@ -35,7 +35,6 @@ BlazingBaton.prototype.initSettings = function() {
 
     var that = this;
     document.querySelector(this.domSelectors.toggleSettings).addEventListener("click", function(event) {
-        console.log("clicki");
         var settingsContainer = document.querySelector(that.domSelectors.settings);
         if(that.guiStatus.settings === true) {
             settingsContainer.classList.add("hidden");
@@ -48,11 +47,14 @@ BlazingBaton.prototype.initSettings = function() {
         }
     });
     
+    document.querySelector(this.domSelectors.addNoteInput).addEventListener("click", function(event) {
+        that.addNoteInputForm();
+    });
     
 };
 
 /**
- * this function lists all javascript destected MIDI inputs
+ * this function lists all destected MIDI inputs
  * as a list in the settings overlay
  * 
  * @method completeSettingsWithInputs
@@ -62,15 +64,18 @@ BlazingBaton.prototype.initSettings = function() {
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.completeSettingsWithInputs = function() {
-    console.log("completeSettingsWithInputs");
-    //console.log(this.webMidi.inputs);
-    //console.log(WebMidi.inputs);
-    var that = this;
+    //console.log("completeSettingsWithInputs");
+    //console.log(this.opts.noteInputs);
     var ul = document.querySelector(this.domSelectors.inputConfig);
-    this.webMidi.inputs.forEach(function(input){
-        //var li = this.getConfigurableInputRowDOM(input);
-        ul.appendChild(that.getConfigurableInputRowDOM(input));
-    });
+    for(var idx in this.opts.noteInputs) {
+        if (!this.opts.noteInputs.hasOwnProperty(idx) || idx === "all") { continue; }
+        var input = this.webMidi.getInputByName(this.opts.noteInputs[idx].name);
+        this.opts.noteInputs[idx].found = true;
+        if(input === false) {
+            this.opts.noteInputs[idx].found = false;
+        }
+        ul.appendChild(this.addNoteInputForm(this.opts.noteInputs[idx]));
+    }
     return this;
 };
 
@@ -79,18 +84,66 @@ BlazingBaton.prototype.completeSettingsWithInputs = function() {
 /**
  * create DOM elements for piano
  *
- * @method getChannelHotspotDom
+ * @method addNoteInputForm
  * @static
  *
- * @param input {Object} The MIDI input provided by webMidi
+ * @param input {NoteInput} The MIDI input provided by webMidi
  *
  * @return {domElement} checkboxes markup
  */
-BlazingBaton.prototype.getConfigurableInputRowDOM = function(input) {
+BlazingBaton.prototype.addNoteInputForm = function(noteInput) {
 
 
-    console.log(input);
+    //console.log(input);
     var li = document.createElement("li");
+
+    var inputSelect = document.createElement("select");
+    
+    var allInputs = this.getAllMidiInputs();
+    var counter = 0;
+    for(var i in allInputs) {
+        inputSelect[counter] = new Option(
+            allInputs[i],
+            i,
+            false,
+            ((noteInput.id === i) ? true : false)
+        );
+        counter++;
+    }
+    li.appendChild(inputSelect);
+
+    var channels = this.range(1, 16);
+    channels[16] = "all";
+    var channelSelect = document.createElement("select");
+
+    for (var i = 0;i <= channels.length - 1;i++){
+        channelSelect[i] = new Option(
+            "CH " + channels[i],
+            channels[i],
+            false,
+            ((noteInput.channel === channels[i]) ? true : false)
+        );
+    }
+    li.appendChild(channelSelect);
+
+    var labelInput = document.createElement("input");
+    labelInput.setAttribute("type", "text");
+    labelInput.setAttribute("value", noteInput.label);
+    li.appendChild(labelInput);
+
+    var colorSelect = document.createElement("select");
+    for (var i = 0;i <= this.colors.length - 1;i++){
+        colorSelect[i] = new Option(
+            this.colors[i],
+            this.colors[i],
+            false,
+            ((noteInput.color === this.colors[i]) ? true : false)
+        );
+    }
+    li.appendChild(colorSelect);
+    
+    return li;
+    /*
     var checkBoxClock = document.createElement("input");
     checkBoxClock.setAttribute("type", "checkbox");
     checkBoxClock.setAttribute("checked", "checked");
@@ -105,5 +158,42 @@ BlazingBaton.prototype.getConfigurableInputRowDOM = function(input) {
     li.appendChild(document.createTextNode(input.name));
 
     return li;
+    */
+};
+
+
+
+/**
+ * this function lists all destected MIDI inputs but also configured
+ * MIDI inputs that are not recognized
+ * 
+ * @method getAllMidiInputs
+ * @static
+ *
+ * @return {Array} Returns an array with [ id => label ] 
+ */
+BlazingBaton.prototype.getAllMidiInputs = function() {
+    var allInputs = [];
+    this.webMidi.inputs.forEach(function(input){
+        //var li = this.getConfigurableInputRowDOM(input);
+        allInputs[ input.id ] = input.name;
+    });
+
+    for(var idx in this.opts.noteInputs) {
+        if (!this.opts.noteInputs.hasOwnProperty(idx) || idx === "all") { continue; }
+        if(typeof allInputs[this.opts.noteInputs[idx].id] !== "undefined") {
+            continue;
+        }
+        allInputs[ this.opts.noteInputs[idx].id ] = this.opts.noteInputs[idx].name + " (not found)";
+    }
+
+    for(var idx in this.opts.clockInputs) {
+        if (!this.opts.clockInputs.hasOwnProperty(idx) || idx === "all") { continue; }
+        if(typeof allInputs[this.opts.clockInputs[idx].id] !== "undefined") {
+            continue;
+        }
+        allInputs[ this.opts.clockInputs[idx].id ] = this.opts.clockInputs[idx].name + " (not found)";
+    }
+    return allInputs;
 };
 

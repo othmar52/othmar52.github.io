@@ -38,6 +38,73 @@ function NoteInput(conf) {
 }
 
 /**
+ * @class ChannelNotesInput
+ * 
+ * @static
+ *
+ */
+function ChannelNotesInput(conf) {
+    conf = (conf) || {};
+    this.id = "";
+    this.name = "";
+    this.found = false;
+    this.channel = 1;
+    this.color = "red";
+    this.genericLabel = "INP %INP% CH %CHAN%";
+    this.ignoreChannels = [10];
+    this.channelOverrides = [];
+    for(var key in conf){
+        if(conf.hasOwnProperty(key) === true) {
+            this[key] = conf[key] ;
+        }
+    }
+    return this;
+}
+
+/**
+ * @class OmniChannelNotesInput
+ * used for MPE supported MIDI controllers which uses all 16 channels
+ * @static
+ *
+ */
+function OmniChannelNotesInput(conf) {
+    conf = (conf) || {};
+    this.id = "";
+    this.name = "";
+    this.found = false;
+    this.color = "red";
+    this.label = "INP %INP%";
+    this.ignoreChannels = [];
+    for(var key in conf){
+        if(conf.hasOwnProperty(key) === true) {
+            this[key] = conf[key] ;
+        }
+    }
+    return this;
+}
+
+/**
+ * @class NoteEventTarget
+ * represents a separate row with color and label
+ * this row may get note events from multiple channels defined in channel mapping 
+ * @static
+ *
+ */
+function NoteEventTarget(conf) {
+    conf = (conf) || {};
+    this.id = "";
+    this.color = "grey";
+    this.label = "input";
+    this.omni = false;
+    for(var key in conf){
+        if(conf.hasOwnProperty(key) === true) {
+            this[key] = conf[key] ;
+        }
+    }
+    return this;
+}
+
+/**
  * @class BlazingConfig
  * @static
  *
@@ -72,6 +139,7 @@ function BlazingConfig() {
     this.hideCursorAfter = 3; // [seconds]
     this.noSleep = true;  // disable screensaver on incoming clock
     this.bar16changeAnnounce = "and"; // last part of huge count down
+    this.stuckNotesRemoval = 20; // [seconds] delete stuck notes. set to zero to not delete stuck notes
 }
 
 /**
@@ -92,9 +160,61 @@ BlazingConfig.prototype.addInput = function(midiInput) {
         case "ClockInput":
             this.clockInputs["i" + midiInput.id] = midiInput;
             break;
+        case "ChannelNotesInput":
+            for(var _channel=1; _channel <=16; _channel++) {
+                if(this.useChannel(midiInput, _channel) === false) {
+                    // skip blacklisted channel
+                    continue;
+                }
+
+                // TODO: add generic label or color in case it is not configured
+                var _label = midiInput.genericLabel.replace("%CHAN%", _channel);
+                var _color = midiInput.color;
+                for(var _channelOverrideIdx = 0; _channelOverrideIdx < midiInput.channelOverrides.length; _channelOverrideIdx++) {
+                    if(midiInput.channelOverrides[_channelOverrideIdx].channel === _channel) {
+                        _label = midiInput.channelOverrides[_channelOverrideIdx].label;
+                        _color = midiInput.channelOverrides[_channelOverrideIdx].color;
+                        break;
+                    }
+                }
+                var noteInput = new NoteInput({
+                    label: _label,
+                    color: _color,
+                    name: midiInput.name,
+                    id: midiInput.id,
+                    channel: _channel
+                });
+                this.noteInputs["i" + midiInput.id + "-" + _channel] = noteInput;
+            }
+            break;
+        case "OmniChannelNotesInput":
+
+            // TODO: add generic label or color in case it is not configured
+            var _label = midiInput.label;
+            var _color = midiInput.color;
+            var noteInput = new NoteInput({
+                label: _label,
+                color: _color,
+                name: midiInput.name,
+                id: midiInput.id,
+                channel: "omni"
+            });
+            this.noteInputs["i" + midiInput.id + "-omni"] = noteInput;
+            break;
         default:
             console.log("invalid input");
             break;
     }
     return this;
 };
+
+
+BlazingConfig.prototype.useChannel = function(midiInput, channel) {
+    for(var _ignoreChannelIdx = 0; _ignoreChannelIdx < midiInput.ignoreChannels.length; _ignoreChannelIdx++) {
+        if(channel === midiInput.ignoreChannels[_ignoreChannelIdx]) {
+            return false;
+        }
+    }
+    return true;
+};
+

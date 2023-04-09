@@ -1,0 +1,82 @@
+
+ 
+ 
+ /** keys */
+ 
+#fullpiano {
+     /*width: 1144px;*/
+     width: 100%;
+     padding: 2px 0 0 2px;
+     overflow: hidden;
+     background: #000;
+     border-radius: 0 0 4px 4px;
+     list-style-type: none;
+     z-index: 400;
+     position: absolute;
+     top: -60px;
+     box-shadow: -50px -50px black, 50px 50px black, -50px 50px black, 50px -50px black;
+ }
+ 
+#fullpiano .key {
+     float: left;
+     position: relative;
+     width: 1.81%;
+     height: 180px;
+     margin: 0 2px 2px 0;
+     background: #fff;
+     border-radius: 0 0 4px 4px;
+}
+#fullpiano .key.pressed,
+#fullpiano .key:active {
+     background: #a16d6d;
+     box-shadow: inset 3px 2px 3px #999, inset -3px 2px 3px #999;
+ }
+ #fullpiano .key.black {
+     width: 0;
+     margin: 0;
+     z-index: 2;
+ }
+ #fullpiano .key.black:after {
+     content: "";
+     position: absolute;
+     top: -2px;
+     left: -13px;
+     display: block;
+     width: 21px;
+     height: 117px;
+     background: #000;
+     border-radius: 0 0 4px 4px;
+     box-shadow: 1px 1px 0 #555, 2px 2px 0 #555;
+ }
+ #fullpiano .key.black1:after {
+     left: -20px;
+ }
+ #fullpiano .key.black3:after {
+     left: -16px;
+ }
+ #fullpiano .key.black.pressed:after,
+ #fullpiano .key.black:active:after {
+     background-color: #a16d6d;
+ }
+ 
+ /* **/
+ 
+ 
+ /* **/
+ 
+ .note {
+     position: fixed;
+     top: 20%;
+     left: 30%;
+     width: 40%;
+     background: #111;
+     background: rgba(0,0,0,.85);
+     border-radius: 10px;
+     padding: 60px 0;
+     color: #fff;
+     font-size: 16px;
+     line-height: 20px;
+     text-align: center;
+     z-index: 999;
+ }
+ 

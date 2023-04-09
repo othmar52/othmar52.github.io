@@ -46,32 +46,32 @@ BlazingBaton.prototype.hideOverlay = function() {
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.checkBigCountDown = function() {
+
     // nothing to do with disabled countDown
     if(this.opts.show.countDown === false) {
         return this;
     }
-    if(this.bar16Counter === 1) {
-        this.hideOverlay();
-        return this;
-    }
-    if(this.bar16Counter < (this.bar16MaxClockEvents - 96)) {
-        return this;
-    }
-    if(this.bar16Counter === (this.bar16MaxClockEvents - 96) ) {
-        this.showOverlayWith("3");
-        return this;
-    }
-    if(this.bar16Counter === (this.bar16MaxClockEvents - 72) ) {
-        this.showOverlayWith("2");
-        return this;
-    }
-    if(this.bar16Counter === (this.bar16MaxClockEvents - 48) ) {
-        this.showOverlayWith("1");
-        return this;
-    }
-    if(this.bar16Counter === (this.bar16MaxClockEvents - 24) ) {
-        this.showOverlayWith(this.opts.bar16changeAnnounce);
-        return this;
+    switch(this.bar16Counter) {
+        case 1:
+        case (this.bar16MaxClockEvents/2):
+            this.hideOverlay();
+            return this;
+        case (this.bar16MaxClockEvents/2 - 96):
+        case (this.bar16MaxClockEvents - 96):
+            this.showOverlayWith("3");
+            return this;
+        case (this.bar16MaxClockEvents/2 - 72):
+        case (this.bar16MaxClockEvents - 72):
+            this.showOverlayWith("2");
+            return this;
+        case (this.bar16MaxClockEvents/2 - 48):
+        case (this.bar16MaxClockEvents - 48):
+            this.showOverlayWith("1");
+            return this;
+        case (this.bar16MaxClockEvents/2 - 24):
+        case (this.bar16MaxClockEvents - 24):
+            this.showOverlayWith(this.opts.bar16changeAnnounce);
+            return this;
     }
     return this;
 };

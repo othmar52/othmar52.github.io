@@ -8,6 +8,18 @@
  * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
  */
 BlazingBaton.prototype.checkTime = function(){
+    if(this.status.overrideTime.enable === true) {
+        if(this.status.overrideTime.recTime === this.status.overrideTime.renderedRecTime) {
+            return;    
+        }
+        document.querySelector(this.domSelectors.time).innerHTML = this.status.overrideTime.recTime;
+        document.querySelector(this.domSelectors.time).classList[
+            this.status.overrideTime.isRecording ? 'add' : 'remove'
+        ]('rec');
+        this.status.overrideTime.renderedRecTime = this.status.overrideTime.recTime;
+        return;
+    }
+    // console.log('check time', this.status.overrideTime);
     // nothing to do with disabled time
     if(this.opts.show.time === false) {
         return this;

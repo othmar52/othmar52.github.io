@@ -7,21 +7,26 @@
         <meta property="og:type" content="website">
         <meta property="og:title" content="Blazing Baton">
         <meta property="og:description" content="Infoscreen for live music performing with MIDI equipment" />
-        <meta name="keywords" content="midi clock monitoring, midi clock overview, midi clock visualization, display midi clock, midi clock loop, break point support, music live performing, midi quipment" />
+        <meta name="keywords" content="midi clock monitoring, midi clock overview, midi clock visualization, display midi clock, midi clock loop, break point support, music live performing, 4/4 beat, midi equipment" />
 
         <link rel="shortcut icon" href="./img/dinplug.jpg">
         <link rel="stylesheet" type="text/css" media="all" href="./css/styles.css">
     </head>
     <body>
+        <div class="progBar hidden" id="progBar64">
+            <div class="innerProgBar" id="innerProgBar64"></div>
+            <div class="progBarGrid"></div>
+            <div id="clockHint"><span>Waiting for clock input...</span></div>
+        </div>
         <div class="progBar hidden" id="progBar16">
             <div class="innerProgBar" id="innerProgBar16"></div>
             <div class="progBarGrid"></div>
-            <div id="clockHint"><span>Waiting for clock input...</span></div>
         </div>
         <div class="progBar progBarDarker hidden" id="progBar4">
             <div class="innerProgBar" id="innerProgBar4"></div>
             <div class="progBarGrid"></div>
         </div>
+        <div id="pulsator"></div>
         <div class="bottom-grid">
             <div class="col-piano">
                 <ul class="simplepiano common hidden" id="piano">
@@ -43,6 +48,9 @@
                 </div>
             </div>
             <div class="col-numbers">
+                <div id="numerator">
+                    <span id="num1">1</span>-<span id="num2">1</span>-<span id="num3">1</span>
+                </div>
                 <div id="time" class="hidden">
                     <div>00:00</div>
                 </div>
@@ -53,32 +61,32 @@
         </div>
         <p id="fake-events">
             <button id="fake-start">start</button>
-            <button class="fake-noteon" data-note="C" data-inputid="input-15" data-channel="1">I1 C on</button>
-            <button class="fake-noteon" data-note="CS" data-inputid="input-15" data-channel="1">I1 C# on</button>
-            <button class="fake-noteon" data-note="D" data-inputid="input-15" data-channel="5">I5 D on</button>
-            <button class="fake-noteon" data-note="DS" data-inputid="input-15" data-channel="5">I5 D# on</button>
-            <button class="fake-noteon" data-note="E" data-inputid="input-15" data-channel="1">I1 E on</button>
-            <button class="fake-noteon" data-note="F" data-inputid="input-15" data-channel="7">I7 F on</button>
-            <button class="fake-noteon" data-note="FS" data-inputid="input-15" data-channel="7">I7 F# on</button>
-            <button class="fake-noteon" data-note="G" data-inputid="input-15" data-channel="8">I8 G on</button>
-            <button class="fake-noteon" data-note="GS" data-inputid="input-15" data-channel="8">I8 G# on</button>
-            <button class="fake-noteon" data-note="A" data-inputid="input-15" data-channel="14">I14 A on</button>
-            <button class="fake-noteon" data-note="AS" data-inputid="input-15" data-channel="14">I14 A# on</button>
-            <button class="fake-noteon" data-note="B" data-inputid="input-15" data-channel="1">I1 H on</button>
+            <button class="fake-noteon" data-note="C" data-inputid="input-3" data-channel="1">I1 C on</button>
+            <button class="fake-noteon" data-note="CS" data-inputid="input-3" data-channel="1">I1 C# on</button>
+            <button class="fake-noteon" data-note="D" data-inputid="input-3" data-channel="5">I5 D on</button>
+            <button class="fake-noteon" data-note="DS" data-inputid="input-3" data-channel="5">I5 D# on</button>
+            <button class="fake-noteon" data-note="E" data-inputid="input-3" data-channel="1">I1 E on</button>
+            <button class="fake-noteon" data-note="F" data-inputid="input-3" data-channel="7">I7 F on</button>
+            <button class="fake-noteon" data-note="FS" data-inputid="input-3" data-channel="7">I7 F# on</button>
+            <button class="fake-noteon" data-note="G" data-inputid="input-3" data-channel="8">I8 G on</button>
+            <button class="fake-noteon" data-note="GS" data-inputid="input-3" data-channel="8">I8 G# on</button>
+            <button class="fake-noteon" data-note="A" data-inputid="input-3" data-channel="14">I14 A on</button>
+            <button class="fake-noteon" data-note="AS" data-inputid="1A0CE1F47C19C43DAEB93B9595F6E4BA822ED318FE8D8BF2750B66286B5BEC38" data-channel="5">I14 A# on</button>
+            <button class="fake-noteon" data-note="B" data-inputid="1A0CE1F47C19C43DAEB93B9595F6E4BA822ED318FE8D8BF2750B66286B5BEC38" data-channel="1">I1 H on</button>
             <br>
             <button id="fake-stop">stop</button>
-            <button class="fake-noteoff" data-note="C" data-inputid="input-15" data-channel="1">I1 C off</button>
-            <button class="fake-noteoff" data-note="CS" data-inputid="input-15" data-channel="1">I1 C# off</button>
-            <button class="fake-noteoff" data-note="D" data-inputid="input-15" data-channel="5">I5 D off</button>
-            <button class="fake-noteoff" data-note="DS" data-inputid="input-15" data-channel="5">I5 D# off</button>
-            <button class="fake-noteoff" data-note="E" data-inputid="input-15" data-channel="1">I1 E off</button>
-            <button class="fake-noteoff" data-note="F" data-inputid="input-15" data-channel="7">I7 F off</button>
-            <button class="fake-noteoff" data-note="FS" data-inputid="input-15" data-channel="7">I7 F# off</button>
-            <button class="fake-noteoff" data-note="G" data-inputid="input-15" data-channel="8">I8 G off</button>
-            <button class="fake-noteoff" data-note="GS" data-inputid="input-15" data-channel="8">I8 G# off</button>
-            <button class="fake-noteoff" data-note="A" data-inputid="input-15" data-channel="14">I14 A off</button>
-            <button class="fake-noteoff" data-note="AS" data-inputid="input-15" data-channel="14">I14 A# off</button>
-            <button class="fake-noteoff" data-note="B" data-inputid="input-15" data-channel="1">I1 H off</button>
+            <button class="fake-noteoff" data-note="C" data-inputid="input-3" data-channel="1">I1 C off</button>
+            <button class="fake-noteoff" data-note="CS" data-inputid="input-3" data-channel="1">I1 C# off</button>
+            <button class="fake-noteoff" data-note="D" data-inputid="input-3" data-channel="5">I5 D off</button>
+            <button class="fake-noteoff" data-note="DS" data-inputid="input-3" data-channel="5">I5 D# off</button>
+            <button class="fake-noteoff" data-note="E" data-inputid="input-3" data-channel="1">I1 E off</button>
+            <button class="fake-noteoff" data-note="F" data-inputid="input-3" data-channel="7">I7 F off</button>
+            <button class="fake-noteoff" data-note="FS" data-inputid="input-3" data-channel="7">I7 F# off</button>
+            <button class="fake-noteoff" data-note="G" data-inputid="input-3" data-channel="8">I8 G off</button>
+            <button class="fake-noteoff" data-note="GS" data-inputid="input-3" data-channel="8">I8 G# off</button>
+            <button class="fake-noteoff" data-note="A" data-inputid="input-3" data-channel="14">I14 A off</button>
+            <button class="fake-noteoff" data-note="AS" data-inputid="1A0CE1F47C19C43DAEB93B9595F6E4BA822ED318FE8D8BF2750B66286B5BEC38" data-channel="5">I14 A# off</button>
+            <button class="fake-noteoff" data-note="B" data-inputid="1A0CE1F47C19C43DAEB93B9595F6E4BA822ED318FE8D8BF2750B66286B5BEC38" data-channel="1">I1 H off</button>
         </p>
         <button id="toggle-settings" title="show/hide settings">
             toggle settings
@@ -88,56 +96,89 @@
             <p>As long as the target group for <strong>Blazing Baton</strong> is zero, this feature won't get implemented.<br>
                 Feel free to <a href="https://github.com/othmar52/blazing-baton/issues" target="_blank">create an issue</a> for this feature request.</p>
             <div id="settings-columns">
-                <fieldset id="general-settings">
-                    <legend for="general-settings">General</legend>
-                    <label for="settings-general-hidecursor">
-                        <input id="settings-general-hidecursor" value="10" size="3" type="text" />
-                        Hide Cursor after [seconds]
-                    </label>
-                    <br>
-                    <label for="settings-general-nosleep">
-                        <input type="checkbox" id="settings-general-nosleep" value="1" checked="checked" />
-                        Disable Screensaver on incoming clock
-                    </label>
-                    <br>
-                    <label for="settings-general-showTime">
-                        <input type="checkbox" id="settings-general-showTime" value="1" checked="checked" />
-                        Show Time
-                    </label>
-                    <br>
-                    <label for="settings-general-showTempo">
-                        <input type="checkbox" id="settings-general-showTempo" value="1" checked="checked" />
-                        Show Tempo
-                    </label>
-                    <br>
-                    <label for="settings-general-showFakeEvents">
-                        <input type="checkbox" id="settings-general-showFakeEvents" value="1" checked="checked" />
-                        Show fake event buttons
-                    </label>
-                    <br>
-                    <label for="settings-general-showPiano">
-                        <input type="checkbox" id="settings-general-showPiano" value="1" checked="checked" />
-                        Show piano for all note events
-                    </label>
+                <fieldset id="settings-show">
+                    <legend for="settings-show">Show</legend>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-progress16" value="1" checked="checked" />
+                            <label for="settings-show-progress16" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-progress16" class="label-text">
+                            Progressbar 16
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-progress4" value="1" checked="checked" />
+                            <label for="settings-show-progress4" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-progress4" class="label-text">
+                            Progressbar 4
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-countdown" value="1" checked="checked" />
+                            <label for="settings-show-countdown" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-countdown" class="label-text">
+                            Countdown
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-piano" value="1" checked="checked" />
+                            <label for="settings-show-piano" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-piano" class="label-text">
+                            Piano
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-time" value="1" checked="checked" />
+                            <label for="settings-show-time" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-time" class="label-text">
+                            Time
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-tempo" value="1" checked="checked" />
+                            <label for="settings-show-tempo" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-tempo" class="label-text">
+                            Tempo
+                        </label>
+                    </div>
                 </fieldset>
                 <fieldset id="hotspot-settings">
                     <legend for="hotspot-settings">Hot spots</legend>
-                    <label for="settings-hotspot-enable">
-                        <input type="checkbox" id="settings-hotspot-enable" value="1" checked="checked" />
-                        Enable hotspots
-                    </label>
-                    <br>
-                    <label for="settings-hotspot-showMerged">
-                        <input type="checkbox" id="settings-hotspot-showMerged" value="1" />
-                        Show merged sum of all channels
-                    </label>
-                    <br>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-hotspots" value="1" checked="checked" />
+                            <label for="settings-show-hotspots" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-hotspots" class="label-text">
+                            Show hotspots
+                        </label>
+                    </div>
+                    <div class="checkbox-wrap">
+                        <div class="checkbox">
+                            <input type="checkbox" id="settings-show-hotspotsum" value="1" checked="checked" />
+                            <label for="settings-show-hotspotsum" class="label-handle"></label>
+                        </div>
+                        <label for="settings-show-hotspotsum" class="label-text">
+                            Show sum <span class="tooltip" title="Show additional note hotspot row with the sum of all inputs and channels">?</span>
+                        </label>
+                    </div>
                     <label for="settings-hotspot-resolution">
                         <select id="settings-hotspot-resolution">
-                            <option value="24">1/8 bar</option>
-                            <option value="24">1/4 bar</option>
-                            <option value="48">1/2 bar</option>
-                            <option value="48">1bar</option>
+                            <option value="24">&frac18; bar</option>
+                            <option value="24">&frac14; bar</option>
+                            <option value="48">&frac12; bar</option>
+                            <option value="48">1 bar</option>
                         </select>
                         Resolution [clock ticks/bar length]
                     </label>
@@ -145,6 +186,7 @@
                     <label for="settings-hotspot-observationPeriod">
                         <select id="settings-hotspot-observationPeriod">
                             <option value="1">1 bar</option>
+                            <option value="2">2 bars</option>
                             <option value="4">4 bars</option>
                             <option value="8">8 bars</option>
                             <option value="16">16 bars</option>
@@ -164,6 +206,7 @@
                 <ul id="input-config">
 
                 </ul>
+                <button id="addNoteInput">Add Note Input</button>
             </fieldset>
         </div>
         <div id="big-overlay"></div>
@@ -180,6 +223,7 @@
         <script type="text/javascript" src="./js/src/multiStop.js"></script>
         <script type="text/javascript" src="./js/src/hotSpots.js"></script>
         <script type="text/javascript" src="./js/src/overlayCountdown.js"></script>
+        <script type="text/javascript" src="./js/src/numerator.js"></script>
         <script type="text/javascript" src="./js/src/settings.js"></script>
         <script type="text/javascript" src="./js/src/time.js"></script>
         <script type="text/javascript" src="./js/src/idle.js"></script>
@@ -192,80 +236,82 @@
             var demoConfig = new BlazingConfig();
             demoConfig.addInput(
                 new ClockInput({
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15"
+                    name: "Express  128: Port 8",
+                    id: "input-7"
                 })
             ).addInput(
-                new NoteInput({
-                    label: "JD-Xi D1",
-                    color: "orange",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 1
-                })
-            ).addInput(
-                new NoteInput({
-                    label: "JD-Xi D2",
-                    color: "orange",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 2
-                })
-            ).addInput(
-                new NoteInput({
-                    label: "JD-Xi A",
-                    color: "blue",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 3
-                })
-            ).addInput(
-                new NoteInput({
-                    label: "System 1",
+                new ChannelNotesInput({
+                    genericLabel: "Wastl #%CHAN%",
                     color: "green",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 5
+                    name: "Express  128: Port 1",
+                    //name: "Control Hub MIDI",
+                    id: "input-0",
+                    ignoreChannels: [10],
+                    channelOverrides: [
+                        { channel: 1, color: "orange", label: "JD-Xi D1" },
+                        { channel: 2, color: "orange", label: "JD-Xi D2" },
+                        { channel: 3, color: "blue", label: "JD-Xi A" },
+                        { channel: 5, color: "green", label: "System 1" },
+                        { channel: 6, color: "cyan", label: "Microkorg" },
+                        { channel: 7, color: "red", label: "Virus A" },
+                        { channel: 8, color: "blue", label: "MFB Synth II" },
+                        { channel: 9, color: "blue", label: "KORG Gadget" }
+                    ]
                 })
             ).addInput(
-                new NoteInput({
-                    label: "Virus A",
-                    color: "red",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 7
+                new ChannelNotesInput({
+                    genericLabel: "Rikki #%CHAN%",
+                    color: "yellow",
+                    name: "Express  128: Port 2",
+                    id: "input-1",
+                    ignoreChannels: [10]
                 })
             ).addInput(
-                new NoteInput({
-                    label: "Microkorg",
+                new ChannelNotesInput({
+                    genericLabel: "Astl #%CHAN%",
                     color: "cyan",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 8
+                    name: "Express  128: Port 3",
+                    id: "input-2",
+                    ignoreChannels: [10],
+                    channelOverrides: [
+                        { channel: 11, color: "violet", label: "Streichfett" },
+                        { channel: 12, color: "green", label: "Rocket" }
+                    ]
                 })
             ).addInput(
-                new NoteInput({
-                    label: "MFB Synth II",
+                new ChannelNotesInput({
+                    genericLabel: "Kurt #%CHAN%",
                     color: "blue",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 14
+                    name: "Express  128: Port 4",
+                    id: "input-3",
+                    ignoreChannels: [10],
+                    channelOverrides: [
+                        { channel: 1, color: "red", label: "Mininova" }
+                    ]
                 })
             ).addInput(
-                new NoteInput({
-                    label: "KORG Gadget",
-                    color: "blue",
-                    name: "MIDIIN16 (iConnectMIDI4+)",
-                    id: "input-15",
-                    channel: 9
+                new ChannelNotesInput({
+                    genericLabel: "Gast A #%CHAN%",
+                    color: "orange",
+                    name: "Express  128: Port 5",
+                    id: "input-4",
+                    ignoreChannels: [10]
                 })
             ).addInput(
-                new NoteInput({
-                    label: "Bass Station",
-                    color: "pink",
-                    name: "MIDIIN15 (iConnectMIDI4+)",
-                    id: "input-14",
-                    channel: 1
+                new ChannelNotesInput({
+                    genericLabel: "Gast B #%CHAN%",
+                    color: "grey",
+                    name: "Express  128: Port 6",
+                    id: "input-5",
+                    ignoreChannels: [10]
+                })
+            ).addInput(
+                new ChannelNotesInput({
+                    genericLabel: "Gast C #%CHAN%",
+                    color: "grey",
+                    name: "Express  128: Port 7",
+                    id: "input-6",
+                    ignoreChannels: [10]
                 })
             );
             var blazingBaton = new BlazingBaton(demoConfig);

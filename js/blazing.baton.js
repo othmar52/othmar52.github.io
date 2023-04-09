@@ -9,9 +9,7 @@
  *
  * @todo: find a graphic designer for GUI improvements
  *
- * @todo: optionally hide duration counter by configuration
- *
- * @todo: activate some build tool for those splitted javascript files
+ * @todo: activate some build tool for those splitted javascript & css files
  *
  * @todo: provide a downloadable .html with inline js+css for offline usage
  *
@@ -42,6 +40,13 @@ function BlazingBaton(userOptions) {
             lastStart: 0,
             bpm: 0
         },
+        // display rec status & time from Soundcraft ui24r mixing console
+        overrideTime: {
+            enable: false,
+            isRecording: false,
+            recTime: '00:00',
+            renderedRecTime: ''
+        },
         // recieving 3 stop events within status.multiStop.resetterTreshold will
         // reset timer ignoring opts.time.stopStartTreshold
         multiStop: {
@@ -62,9 +67,11 @@ function BlazingBaton(userOptions) {
 
     this.bar4Counter = 0;
     this.bar16Counter = 0;
+    this.bar64Counter = 0;
 
     this.bar4MaxClockEvents = 24*16;
     this.bar16MaxClockEvents = 24*64;
+    this.bar64MaxClockEvents = 24*64*4;
 
     // there is no need to calculate bpm on each clock event
     // recalculate bpm after bpmCalculateDelay clock-events
@@ -87,6 +94,13 @@ function BlazingBaton(userOptions) {
 
         progBar4: "#innerProgBar4",
         progBar16: "#innerProgBar16",
+        progBar64: "#innerProgBar64",
+
+        numerator: {
+            num1: "#num1",
+            num2: "#num2",
+            num3: "#num3"
+        },
 
         fakeEvents: "#fake-events",
         fakeStart: "#fake-start",
@@ -98,7 +112,8 @@ function BlazingBaton(userOptions) {
 
         settings: "#settings",
         toggleSettings: "#toggle-settings",
-        inputConfig: "#input-config"
+        inputConfig: "#input-config",
+        addNoteInput: "#addNoteInput"
     };
 
     // visibility of some elements
@@ -114,6 +129,14 @@ function BlazingBaton(userOptions) {
     this.inputs = [];
 
     this.freeInputSlot = true;
+    
+    // lookup object which holds colors labels which helps to decide if we should ignore the note event
+    // for an 8 input midi device it holds 8x16 (=128) entries
+    this.noteEventTargetMapping = [];
+
+    // each entry represents a separate hotspot target row
+    this.noteEventTargets = [];
+
     this.init();
 }
 
@@ -148,20 +171,50 @@ BlazingBaton.prototype.init = function() {
                 "clock", "all", function(event) { that.handleEventMidiClock(event); }
             );
         }
+		// hasListener() does not support anonymous function. so we have to assign it to a variable
+		var listenerNoteOn = function(event) { that.handleEventMidiNoteOn(event); };
+		var listenerNoteOff = function(event) { that.handleEventMidiNoteOff(event); };
+
         for(var idx in that.opts.noteInputs) {
             if (!that.opts.noteInputs.hasOwnProperty(idx) || idx === "all") { continue; }
-            var input = that.webMidi.getInputByName(that.opts.noteInputs[idx]);
+            
+            var noteEventTarget = new NoteEventTarget({
+                id: that.opts.noteInputs[idx].id,
+                color: that.opts.noteInputs[idx].color,
+                label: that.opts.noteInputs[idx].label
+            });
+            var uniqueIdentifier = "i"+that.opts.noteInputs[idx].id + "-" + that.opts.noteInputs[idx].channel;
+			
+			that.noteEventTargetMapping[uniqueIdentifier] = uniqueIdentifier;
+			if(that.opts.noteInputs[idx].channel === "omni") {
+				noteEventTarget.omni = true;
+				for(var _channel=1; _channel <=16; _channel++) {
+					that.noteEventTargetMapping["i"+that.opts.noteInputs[idx].id + "-" + _channel] = uniqueIdentifier;
+				}
+			}
+			that.noteEventTargets[uniqueIdentifier] = noteEventTarget;
+            
+            var input = that.webMidi.getInputByName(that.opts.noteInputs[idx].name);
+
             if(input === false) {
                 that.notify("Configured input '"+ that.opts.noteInputs[idx].name +"' not found", 1511767885);
                 continue;
             }
+            if(input.hasListener("noteon", ["all"], listenerNoteOn)) {
+                //console.log("all listener on this input is already attached...");
+                continue;
+            }
+            //console.log("all listener is NOT attached...");
+            //console.log("ADDING LISTENER" + that.opts.noteInputs[idx].name + " " + that.opts.noteInputs[idx].channel);
             input.addListener(
-                "noteon", that.opts.noteInputs[idx].channel, function(event) { that.handleEventMidiNoteOn(event); }
+                "noteon", "all", listenerNoteOn
             );
             input.addListener(
-                "noteoff", that.opts.noteInputs[idx].channel, function(event) { that.handleEventMidiNoteOff(event); }
+                "noteoff", "all", listenerNoteOff
             );
         }
+        //console.log(that.noteEventTargetMapping);
+        //console.log(that.noteEventTargets);
     });
 
     // complete hotSpot tracking configuration
@@ -173,7 +226,21 @@ BlazingBaton.prototype.init = function() {
     this.initDemo();
     this.initSettings();
 
-    this.showProgressBar16().showProgressBar4().showPiano().showHotspots().showTime().showTempo();
+    this.showProgressBar64().showProgressBar16().showProgressBar4().showPiano().showHotspots().showTime().showTempo();
+
+    // optionally get rec status & rec time from external
+    if (window.parent === window.self) {
+        // no embedded frame
+        return
+    }
+    window.addEventListener(
+        "message",
+        (event) => {
+            that.status.overrideTime.enable = true
+            that.status.overrideTime.isRecording = event.data.rec;
+            that.status.overrideTime.recTime = event.data.sec;
+        }
+    );
 };
 
 
@@ -214,6 +281,23 @@ BlazingBaton.prototype.showProgressBar4 = function() {
 /**
  * show gui element based on configuration
  * 
+ * @method showProgressBar64
+ * @static
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.showProgressBar64 = function() {
+    if(this.opts.show.progress64bars === false) {
+        return this;
+    }
+    document.querySelector(this.domSelectors.progBar64).parentNode.classList.remove("hidden");
+    return this;
+}
+
+/**
+ * show gui element based on configuration
+ * 
  * @method showPiano
  * @static
  * @chainable
@@ -225,13 +309,17 @@ BlazingBaton.prototype.showPiano = function() {
         return this;
     }
     document.querySelector(this.domSelectors.piano).classList.remove("hidden");
+
+    // temporary hack for fullPiano screen recording
+    //document.querySelector("#progBar4").appendChild(this.getPianoDom());
+
     return this;
 }
 
 /**
  * show gui element based on configuration
  * 
- * @method showPiano
+ * @method showTime
  * @static
  * @chainable
  * 

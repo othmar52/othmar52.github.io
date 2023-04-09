@@ -12,3 +12,25 @@
 	color: #FF5050;
 	font-weight: 800;
 }
+
+#time.rec::before {
+	content: "";
+	display: block;
+	position: absolute;
+	height: 40px;
+	width: 40px;
+	right: 40px;
+	background-color: #FF5050;
+	border-radius: 20px;
+	animation: pulse 1.5s infinite ease-in;
+}
+
+@keyframes pulse {
+	from {
+	  opacity: 1;
+	}
+	to {
+	  opacity: 0.3;
+	}
+}
+  

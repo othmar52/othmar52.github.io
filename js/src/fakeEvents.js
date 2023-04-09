@@ -37,7 +37,7 @@ BlazingBaton.prototype.initDemo = function() {
                 note: {
                     name: this.dataset.note,
                     octave: 3,
-                    number: 22
+                    number: 80
                 }
             });
         });
@@ -55,7 +55,7 @@ BlazingBaton.prototype.initDemo = function() {
                 note: {
                     name: this.dataset.note,
                     octave: 3,
-                    number: 22
+                    number: 80
                 }
             });
         });

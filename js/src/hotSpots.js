@@ -277,7 +277,7 @@ BlazingBaton.prototype.checkPianoHighlight = function() {
 BlazingBaton.prototype.handleSegmentChange = function() {
     var i = this.openNotes.length;
     var microTime = Date.now();
-
+    var stuckNoteIndex = null; 
     while(i--) {
         // create new historyEntry
         this.notesHistory.push({
@@ -285,6 +285,7 @@ BlazingBaton.prototype.handleSegmentChange = function() {
             input: this.openNotes[i].input,
             channel: this.openNotes[i].channel,
             note: this.openNotes[i].note,
+            number: this.openNotes[i].number,
             type: this.openNotes[i].type,
             segment: this.openNotes[i].segment,
             start: this.openNotes[i].start,
@@ -292,11 +293,116 @@ BlazingBaton.prototype.handleSegmentChange = function() {
             playtime: microTime - this.openNotes[i].start
         });
         // update openNoteEntry
+        //console.log(microTime)
+        this.openNotes[i].playtime += microTime - this.openNotes[i].start;
+        
+        if(this.opts.stuckNotesRemoval > 0 && this.openNotes[i].playtime > this.opts.stuckNotesRemoval*1000) {
+            stuckNoteIndex = i;
+        }
         this.openNotes[i].type = "hold";
         this.openNotes[i].start = microTime;
         this.openNotes[i].segment = this.hotSpot.segment.current;
     }
-    this.refreshHotspots().checkTotalTime();
+    if(stuckNoteIndex !== null ) {
+        this.openNotes.splice(stuckNoteIndex, 1);
+        this.checkPianoHighlight();
+    }
+    this.refreshHotspots().checkTotalTime();//.flashSegmentChange();
     return this;
 }
 
+/**
+ * this method adds and removes a class
+ * the css animation creates a pulsating effect on every beat
+ * todo: remove hardcoded dom selector
+ * currently disabled...
+ * 
+ * @method flashSegmentChange
+ * @chainable
+ * 
+ * @return {BlazingBaton} Returns the `BlazingBaton` object so methods can be chained.
+ */
+BlazingBaton.prototype.flashSegmentChange = function() {
+    document.querySelector("#pulsator").classList.add("pulsate");
+    //document.querySelector(this.domSelectors.progBar16).classList.add("green");
+    //var that = this;
+    setTimeout(
+        function(){
+            document.querySelector("#pulsator").classList.remove("pulsate");
+            //document.querySelector(that.domSelectors.progBar16).classList.remove("green");
+        },
+        100
+    );
+    return this;
+};
+
+/**
+ * create DOM elements for piano
+ *
+ * @method getPianoDom
+ * @static
+ *
+ * @return {domElement} the ul with all its key li's
+ */
+BlazingBaton.prototype.getPianoDom = function() {
+    var keyConf = {
+        C: "white", CS: "black", // black1",
+        D: "white", DS: "black", // black3",
+        E: "white",
+        F: "white", FS: "black", // black1",
+        G: "white", GS: "black", // black2",
+        A: "white", AS: "black", // black3",
+        B: "white"
+    };
+
+    // TODO: move to config
+    let startNumber = 21;
+    let keyAmount = 88;
+
+    var ul = document.createElement("ul");
+    ul.id = "fullpiano";
+    ul.classList.add("simpleXpiano", "comXmon", "fullpiano", "keys");
+
+    for(var i=startNumber; i < startNumber+keyAmount; i++) {
+        var noteLetter = this.noteNumberToLetter(i);
+        var li = document.createElement("li");
+        li.classList.add(noteLetter, keyConf[noteLetter], "key");
+        li.setAttribute("data-keyname", noteLetter);
+        li.setAttribute("data-notenumber", i);
+        var hotness = document.createElement("div");
+        hotness.classList.add("hotness")
+        li.appendChild(hotness);
+        var noteon = document.createElement("div");
+        noteon.classList.add("noteon")
+        li.appendChild(noteon);
+        ul.appendChild(li);
+    }
+    return ul;
+};
+
+
+/**
+ * converts note number to letter
+ * 
+ * noteNumer 0 is C of octave -2
+ * noteNumer 127 is G of octave 8
+ *
+ * @method noteNumberToLetter
+ * @static
+ *
+ * @param noteNumber {Int} 0 - 127
+ * @return {string} the letter representation of the note
+ */
+BlazingBaton.prototype.noteNumberToLetter = function(noteNumber) {
+    var keys = ["C", "CS", "D", "DS", "E", "F", "FS", "G", "GS", "A", "AS", "B"];
+    var mapping = [];
+    var currentKeys = [...keys];
+    for(var i = 0; i < 128; i++) {
+        mapping[i] = currentKeys.shift();
+        if(currentKeys.length === 0) {
+            currentKeys = [...keys];
+        }
+        
+    }
+    return mapping[noteNumber];
+};
