@@ -1,0 +1,4875 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eurorack Cheat Sheets</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        nav button {
+            background: #333; color: white; border: none; padding: 10px; cursor: pointer;
+            border-radius: 4px; font-family: monospace;
+        }
+
+        nav button.active { background: #555; }
+
+        .card-container {
+            display: none;
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .card-container.active { display: block; }
+
+        @media print {
+            @page { size: A5 portrait; margin: 0; }
+            body { background-color: #121212 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            nav { display: none !important; } 
+            .card-container { display: block !important; page-break-after: always; height: 100vh; overflow: hidden; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="active" onclick="showCard('module-0')">Dual FX</button>
+<button class="" onclick="showCard('module-1')">Milky Way</button>
+<button class="" onclick="showCard('module-2')">Vhikk X</button>
+<button class="" onclick="showCard('module-3')">Pico DSP</button>
+<button class="" onclick="showCard('module-4')">Pico Voice</button>
+<button class="" onclick="showCard('module-5')">Alter 1</button>
+<button class="" onclick="showCard('module-6')">Easy Quantizer</button>
+<button class="" onclick="showCard('module-7')">Morphagene</button>
+<button class="" onclick="showCard('module-8')">Plaits</button>
+<button class="" onclick="showCard('module-9')">nRings</button>
+<button class="" onclick="showCard('module-10')">3PT</button>
+<button class="" onclick="showCard('module-11')">Proteus</button>
+<button class="" onclick="showCard('module-12')">Clockwerk</button>
+
+    </nav>
+
+    <div id="module-0" class="card-container active">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&display=swap");
+
+  .dual-fx-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #313338;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    /* Der Trick für Fullscreen: Modul auf volle Höhe zwingen */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px); /* Bildschirmhöhe minus Navigation/Padding */
+    min-height: 400px; /* Fallback, damit es auf winzigen Screens nicht kaputt geht */
+  }
+
+  .dual-fx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0; /* Header darf nicht mitschrumpfen */
+  }
+
+  .dual-fx-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    /* Schrift wächst mit der Fenstergröße mit! */
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+
+  .dual-fx-logo {
+    width: clamp(30px, 5vh + 2vw, 80px);
+    height: auto;
+  }
+
+  /* Flexbox anstelle von Table für die vertikale Dehnung */
+  .fx-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Nimmt den gesamten restlichen Platz ein */
+    width: 100%;
+  }
+
+  .fx-row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Jede Zeile dehnt sich gleichmäßig in die Höhe! */
+    border-bottom: 1px solid #444649;
+    /* Dynamische Schriftgröße für die Tabellen-Inhalte */
+    font-size: clamp(10px, 2vh + 0.5vw, 40px);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .fx-row:last-child {
+    border-bottom: none;
+  }
+
+  .fx-row.header {
+    flex-grow: 0; /* Tabellenkopf bleibt schmal */
+    padding-bottom: 1vh;
+    border-bottom: 2px solid #ffffff;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(10px, 1.5vh + 0.5vw, 30px);
+    color: #ffffff;
+  }
+
+  /* Spaltenbreiten */
+  .col-led {
+    width: 15%;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    gap: clamp(2px, 0.5vw, 10px);
+  }
+  .col-fx {
+    width: 30%;
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+  .col-mix {
+    width: 15%;
+  }
+  .col-p1 {
+    width: 20%;
+  }
+  .col-p2 {
+    width: 20%;
+  }
+
+  /* Mitwachsende LEDs */
+  .led {
+    width: clamp(8px, 1.5vh + 0.2vw, 30px);
+    height: clamp(8px, 1.5vh + 0.2vw, 30px);
+    border-radius: 50%;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.4),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  .led.grey {
+    background: radial-gradient(circle at 35% 35%, #8e9092, #47494c, #1f2022);
+  }
+
+  .led.red {
+    background: radial-gradient(circle at 35% 35%, #ff5e5e, #e60000, #660000);
+    box-shadow:
+      0 0 6px rgba(255, 0, 0, 0.5),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .dual-fx-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .dual-fx-title,
+    .fx-row.header {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .fx-row {
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .col-fx {
+      color: #000;
+    }
+    .led.grey {
+      background: #ccc;
+      box-shadow: none;
+      border: 1px solid #999;
+    }
+    .led.red {
+      background: #e60000;
+      box-shadow: none;
+      border: 1px solid #900;
+    }
+    .dual-fx-logo path,
+    .dual-fx-logo circle {
+      stroke: #000 !important;
+    }
+    .dual-fx-logo path[fill="#313338"] {
+      fill: #fff !important;
+    }
+  }
+</style>
+
+<div class="dual-fx-theme">
+  <div class="dual-fx-header">
+    <h1 class="dual-fx-title">DUAL FX</h1>
+    <svg
+      class="dual-fx-logo"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M50 85 C30 85, 20 70, 20 50 C20 30, 30 15, 50 15 C70 15, 80 30, 80 50 C80 70, 70 85, 50 85 Z"
+        stroke="white"
+        stroke-width="6"
+        fill="#313338"
+      />
+      <circle cx="35" cy="45" r="5" fill="white" />
+      <circle cx="65" cy="45" r="5" fill="white" />
+      <path
+        d="M45 65 L55 65"
+        stroke="white"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <path d="M50 85 L50 95" stroke="white" stroke-width="6" />
+      <path
+        d="M40 95 L60 95"
+        stroke="white"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+      <circle cx="20" cy="50" r="4" fill="white" />
+      <circle cx="80" cy="50" r="4" fill="white" />
+    </svg>
+  </div>
+
+  <div class="fx-list">
+    <div class="fx-row header">
+      <div class="col-led"></div>
+      <div class="col-fx">FX</div>
+      <div class="col-mix">D/W</div>
+      <div class="col-p1">PRM 1</div>
+      <div class="col-p2">PRM 2</div>
+    </div>
+
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">MONO DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">STEREO DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led red"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">HI PASS DELAY</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TIME</div>
+      <div class="col-p2">HP FILT</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led red"></div>
+        <div class="led grey"></div>
+      </div>
+      <div class="col-fx">BIG REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SIZE</div>
+      <div class="col-p2">TONE</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led grey"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">SAT REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SIZE</div>
+      <div class="col-p2">TONE</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led grey"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">STALK REVERB</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">TONE</div>
+      <div class="col-p2">FEEDBK</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led grey"></div>
+        <div class="led red"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">RIPPER</div>
+      <div class="col-mix">DRIVE</div>
+      <div class="col-p1">CRUSH</div>
+      <div class="col-p2">D. TIME</div>
+    </div>
+    <div class="fx-row">
+      <div class="col-led">
+        <div class="led red"></div>
+        <div class="led red"></div>
+        <div class="led red"></div>
+      </div>
+      <div class="col-fx">DUAL PITCH</div>
+      <div class="col-mix">DRY/WET</div>
+      <div class="col-p1">SHIFT 1</div>
+      <div class="col-p2">SHIFT 2</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-1" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .mw-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1b1e; /* Dunkles Endorphin.es Grau */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  /* Der unsichtbare Toggle-Hack */
+  #mw-toggle {
+    display: none;
+  }
+
+  .mw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .mw-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #f1c40f; /* Endorphin.es Gold */
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .mw-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Der Toggle-Button */
+  .toggle-btn {
+    background: #333;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #aaa;
+    border: 1px solid #555;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #444;
+    color: #fff;
+  }
+
+  /* Wenn aktiviert: Button-Styling ändern */
+  #mw-toggle:checked ~ .mw-header .toggle-btn {
+    background: #f1c40f;
+    color: #000;
+    border-color: #f1c40f;
+  }
+  #mw-toggle:checked ~ .mw-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  .mw-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 3vw;
+    flex: 1;
+    min-height: 0; /* Wichtig für flexibles Scroll-Verhalten */
+    overflow-y: hidden; /* Standardmäßig kein Scrollen (Schmalspur) */
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .mw-content {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .mw-bank {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bank-title {
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 2vh + 0.5vw, 24px);
+    color: #f1c40f;
+    margin-bottom: 1vh;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px dashed #444;
+    padding-bottom: 4px;
+  }
+
+  .mw-row {
+    display: flex;
+    align-items: center; /* Schmalspur: Alles in einer Zeile zentrieren */
+    border-bottom: 1px solid #333;
+    flex-grow: 1; /* Schmalspur: Zeilen dehnen sich in die Höhe */
+  }
+
+  .mw-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* --- WENN DER DETAILS-BUTTON GEDRÜCKT WIRD --- */
+  #mw-toggle:checked ~ .mw-content {
+    overflow-y: auto; /* Scrollen erlauben */
+    padding-right: 5px;
+  }
+  #mw-toggle:checked ~ .mw-content .mw-row {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 0; /* Zeilen dehnen sich nicht mehr */
+    padding: 1.5vh 0;
+  }
+  #mw-toggle:checked ~ .mw-content .mw-desc {
+    display: block; /* Beschreibungen einblenden */
+  }
+
+  /* LEDs */
+  .led-container {
+    display: flex;
+    gap: clamp(2px, 0.4vw, 5px);
+    margin-right: 1vw;
+  }
+
+  .led-circ {
+    width: clamp(8px, 1.2vh + 0.2vw, 20px);
+    height: clamp(8px, 1.2vh + 0.2vw, 20px);
+    border-radius: 50%;
+    border: 1px solid #111;
+  }
+
+  .led-full {
+    background: radial-gradient(circle at 35% 35%, #fffde6, #ffe066, #b39b30);
+    box-shadow:
+      0 0 8px rgba(255, 224, 102, 0.6),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+    border-color: #99831a;
+  }
+
+  .led-dim {
+    background: radial-gradient(circle at 35% 35%, #aaa, #887755, #443b2a);
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .led-off {
+    background: radial-gradient(circle at 35% 35%, #555, #2a2a2a, #111);
+    box-shadow: inset 0 -1px 3px rgba(0, 0, 0, 0.8);
+  }
+
+  .algo-name {
+    font-size: clamp(11px, 1.8vh + 0.4vw, 28px);
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .mw-desc {
+    display: none; /* Standardmäßig versteckt */
+    font-size: clamp(10px, 1.4vh + 0.2vw, 18px);
+    color: #9a9c9e;
+    margin-top: 8px;
+    line-height: 1.4;
+    text-align: justify;
+  }
+
+  /* Print-Optimierung: Immer Vollversion drucken! */
+  @media print {
+    .mw-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .mw-content {
+      overflow: visible !important;
+      height: auto !important;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .mw-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      flex-grow: 0 !important;
+      page-break-inside: avoid;
+    }
+    .mw-desc {
+      display: block !important;
+      color: #333;
+    }
+    .algo-name {
+      color: #000;
+    }
+    .led-circ {
+      box-shadow: none !important;
+    }
+    .led-full {
+      background: #ffe066;
+      border-color: #000;
+    }
+    .led-off {
+      background: #eee;
+    }
+  }
+</style>
+
+<div class="mw-theme">
+  <input type="checkbox" id="mw-toggle" />
+
+  <div class="mw-header">
+    <div>
+      <div class="mw-brand">Endorphin.es</div>
+      <h1 class="mw-title">MILKY WAY</h1>
+    </div>
+    <label for="mw-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="mw-content">
+    <div class="mw-bank">
+      <div class="bank-title">
+        AIRWAYS BANK
+        <svg width="20" height="20" viewBox="0 0 100 100">
+          <polygon
+            points="50,5 95,95 5,95"
+            fill="#f1c40f"
+            stroke="#333"
+            stroke-width="5"
+          />
+          <circle
+            cx="50"
+            cy="65"
+            r="16"
+            fill="#4a90e2"
+            stroke="#4a90e2"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Hall Reverb</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin fever'</strong> knob defines the decay of the reverb or
+          hall size. Holding 'tap' for longer than 1 second enables the
+          secondary function: fixed hi-pass filter to cut off low frequencies
+          and have more 'air' in the final output.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Shimmer Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Variation of the hall reverb with a pitch shifter to create choir-like
+          spaces. Primary <strong>'cabin fever'</strong> defines decay,
+          secondary function defines the amount of pitch-shifter mixed into
+          original reverb.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Stereo Room Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Recreates a sort of stereo room ambience. Primary
+          <strong>'cabin fever'</strong> defines room size and the secondary
+          defines the stereo spread of the reverb, from mono up to a huge stereo
+          spread.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+          </div>
+          <div class="algo-name">Plate Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines the decay of the reverb
+          (distance from pickups to metal plate). Secondary parameter defines
+          the amount of pre-delay to distant sounds in ambience.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Spring Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines decay. With 'tap'
+          button you can simulate plucking the real spring. Secondary function
+          is tied to 'pluck the spring' feature and defines how fast the spring
+          will calm down.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Ping-Pong Delay</div>
+        </div>
+        <div class="mw-desc">
+          A stereo clocked delay. A 'tap' is 3+ short clicks. Primary
+          <strong>'cabin fever'</strong> defines feedback. Secondary defines
+          clock division of incoming tap/clock: 1, 3/4, 2/3, 1/2, 1/3, 1/4, 1/8.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Tape Echo</div>
+        </div>
+        <div class="mw-desc">
+          Delay with 3 fixed playback heads. Primary
+          <strong>'cabin fever'</strong> defines repeat rate (speed of tape).
+          'Tap' defines feedback. Secondary works as a divider for the incoming
+          clock.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+          </div>
+          <div class="algo-name">Chorus</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines feedback amount (up to
+          infinite unrealistic ambient). Secondary parameter defines modulation
+          depth, which is 'full on' by default.
+        </div>
+      </div>
+    </div>
+
+    <div class="mw-bank">
+      <div class="bank-title">
+        DARKWAVES BANK
+        <svg width="20" height="20" viewBox="0 0 100 100">
+          <polygon
+            points="50,5 95,95 5,95"
+            fill="#f1c40f"
+            stroke="#333"
+            stroke-width="5"
+          />
+          <circle
+            cx="50"
+            cy="65"
+            r="16"
+            fill="#e74c3c"
+            stroke="#e74c3c"
+            stroke-width="2"
+          />
+        </svg>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Gated Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Plate reverb with noise gate. Primary
+          <strong>'cabin fever'</strong> defines reverb decay, secondary defines
+          threshold of the noise gate. Attack and decay are fixed.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Spring Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Primary <strong>'cabin fever'</strong> defines decay. With 'tap'
+          button you can simulate plucking the spring. Secondary function
+          defines DECAY of how fast the spring will calm down after manually
+          plucking.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Reversed Reverb</div>
+        </div>
+        <div class="mw-desc">
+          Takes reverb tail and reverses it (breathing effect).
+          <strong>'Cabin pressure'</strong> defines predelay (dry/wet).
+          <strong>'Cabin fever'</strong> sets decay. Secondary function: damping
+          (volume of the tail/head).
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-full"></div>
+          </div>
+          <div class="algo-name">Flanger</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> sets amount of delay. Primary
+          <strong>'cabin fever'</strong> sets LFO speed. Secondary defines
+          feedback for sweeping, airplane engine alike sounds.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Ring Modulator</div>
+        </div>
+        <div class="mw-desc">
+          Multiplies signal with internal sine wave.
+          <strong>'Cabin pressure'</strong> defines modulation amount,
+          <strong>'cabin fever'</strong> defines speed. Secondary function
+          controls feedback for special dirtiness.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Overdrive</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> adjusts drive with volume
+          compensation, <strong>'cabin fever'</strong> defines tone control.
+          'Tap' button makes the effect active/bypassed (latching via trigger CV
+          input).
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+            <div class="led-circ led-off"></div>
+          </div>
+          <div class="algo-name">Peak Compressor</div>
+        </div>
+        <div class="mw-desc">
+          <strong>'Cabin pressure'</strong> defines threshold (-90dB to 0dB).
+          Primary <strong>'cabin fever'</strong> sets gain reduction ratio.
+          Secondary defines attack (1-200ms). Release is 'auto'. CV input acts
+          as side-chain.
+        </div>
+      </div>
+
+      <div class="mw-row">
+        <div class="mw-main-line">
+          <div class="led-container">
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-off"></div>
+            <div class="led-circ led-dim"></div>
+          </div>
+          <div class="algo-name">Freezer / Looper</div>
+        </div>
+        <div class="mw-desc">
+          When 'tap' is pressed (or CV gate is ON), audio is looped by the grain
+          length defined by <strong>'cabin fever'</strong>, with speed defined
+          by <strong>'cabin pressure'</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-2" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
+
+  .vhikk-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #111213;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  #vhikk-toggle {
+    display: none;
+  }
+
+  .vhikk-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #3f1d1d;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .vhikk-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .vhikk-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .toggle-btn {
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #4fd1c5;
+    border: 1px solid #4fd1c5;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #4fd1c5;
+    color: #000;
+  }
+
+  #vhikk-toggle:checked ~ .vhikk-header .toggle-btn {
+    background: #4fd1c5;
+    color: #000;
+  }
+  #vhikk-toggle:checked ~ .vhikk-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  .vhikk-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5vh 2vw;
+    flex: 1;
+    min-height: 0;
+    overflow-y: hidden;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .vhikk-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(5, 1fr);
+      grid-auto-flow: column;
+    }
+    .vhikk-row:nth-child(5),
+    .vhikk-row:nth-child(9) {
+      border-bottom: none;
+    }
+  }
+
+  .vhikk-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a1515;
+    flex-grow: 1;
+  }
+
+  .vhikk-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+  }
+
+  #vhikk-toggle:checked ~ .vhikk-content {
+    overflow-y: auto;
+    padding-right: 5px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+  #vhikk-toggle:checked ~ .vhikk-content .vhikk-row {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 0;
+    padding: 2vh 0;
+    border-bottom: 1px solid #3f1d1d;
+  }
+  #vhikk-toggle:checked ~ .vhikk-content .vhikk-desc {
+    display: grid;
+  }
+
+  .led-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1px, 0.2vw, 3px);
+    width: clamp(14px, 2vh + 0.5vw, 24px);
+    height: clamp(20px, 3vh + 1vw, 36px);
+    flex-shrink: 0;
+  }
+
+  .led-cell {
+    background-color: #1a1c1d;
+    border: 1px solid #4fd1c5;
+    border-radius: 1px;
+  }
+
+  .led-cell.on {
+    background-color: #4fd1c5;
+    box-shadow: 0 0 6px rgba(79, 209, 197, 0.6);
+    border-color: #81e6d9;
+  }
+
+  .algo-name {
+    font-size: clamp(10px, 1.6vh + 0.3vw, 24px);
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1.2;
+  }
+
+  .algo-effect {
+    color: #5e646a;
+  }
+
+  .vhikk-desc {
+    display: none;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    row-gap: 4px;
+    width: 100%;
+    margin-top: 12px;
+    padding-left: clamp(25px, 4vh + 1vw, 55px);
+    font-family: "Roboto Mono", monospace;
+    font-size: clamp(9px, 1.2vh + 0.2vw, 16px);
+    color: #9ca3af;
+  }
+
+  .param-label {
+    color: #4fd1c5;
+    font-weight: 700;
+  }
+  .param-val {
+    color: #d1d5db;
+  }
+  .param-val span {
+    color: #9ca3af;
+  }
+
+  @media print {
+    .vhikk-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .vhikk-content {
+      overflow: visible !important;
+      height: auto !important;
+      grid-template-columns: 1fr !important;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .vhikk-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      flex-grow: 0 !important;
+      page-break-inside: avoid;
+      border-bottom: 1px solid #ccc !important;
+      padding: 10px 0 !important;
+    }
+    .vhikk-desc {
+      display: grid !important;
+      padding-left: 30px;
+    }
+    .algo-name {
+      color: #000;
+    }
+    .param-label {
+      color: #555;
+    }
+    .param-val {
+      color: #222;
+    }
+    .led-cell {
+      background-color: #eee;
+      border-color: #ccc;
+    }
+    .led-cell.on {
+      background-color: #000;
+      box-shadow: none;
+      border-color: #000;
+    }
+  }
+</style>
+
+<div class="vhikk-theme">
+  <input type="checkbox" id="vhikk-toggle" />
+
+  <div class="vhikk-header">
+    <div>
+      <div class="vhikk-brand">Forge TME</div>
+      <h1 class="vhikk-title">VHIKK X</h1>
+    </div>
+    <label for="vhikk-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="vhikk-content">
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          2 oscillator "analogue-style"
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> exponential cross-mod | <span>CW:</span> ring-mod
+          level
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">modulator relative tuning offset</div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">carrier waveform scan (pulse/saw/sine)</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> filter resonance and
+          shape
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          multi-mode filter freq randomisation + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">modulator waveform scan (pulse/saw/sine)</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          Dynamic waveshaping oscillator pair
+          <br /><span class="algo-effect"
+            >with reflekta, diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> modulation index - modulator feedback |
+          <span>CW:</span> modulation index - carrier feedback
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> carrier frequency | <span>CW:</span> carrier
+          frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">carrier waveform scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> delay line audio rate modulation |
+          <span>CW:</span> saturation gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          multi-notch filter freq randomisation + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base waveshape set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          Multi-sine cluster oscillator bank
+          <br /><span class="algo-effect">dungeon metallic delay/reverb</span>
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> oscillator phase feedback |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency spread | <span>CW:</span> frequency +
+          stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> oscillator noise
+          modulation
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">inter-oscillator ring-mod mix</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> continuous oscillator bit depth reduction |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> filter bandpass morph with parallel sine oscillator
+          | <span>CW:</span> chorus mix and filter resonance + shape
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> direct-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> chorus mix | <span>CW:</span> chorus mix and filter
+          resonance
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator wavetable scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          <span>CCW:</span> frequency + waveform spread |
+          <span>CW:</span> frequency + stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">wavetable scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> oscillator -&gt; allpass+delay line audio rate
+          modulation| <span>CW:</span> individual oscillator wavefold amount
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator diatonic-quantised cluster scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar quantised cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator cluster scanning
+          <br /><span class="algo-effect"
+            >with dungeon metallic delay/reverb</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+
+    <div class="vhikk-row">
+      <div class="vhikk-main-line">
+        <div class="led-matrix">
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell"></div>
+          <div class="led-cell on"></div>
+          <div class="led-cell on"></div>
+        </div>
+        <div class="algo-name">
+          4 oscillator cluster scanning
+          <br /><span class="algo-effect"
+            >with reflekta diffuse delay structure</span
+          >
+        </div>
+      </div>
+      <div class="vhikk-desc">
+        <div class="param-label">WARP</div>
+        <div class="param-val">
+          <span>CCW:</span> inter-oscillator phase modulation |
+          <span>CW:</span> inter-oscillator exponential frequency cross-mod
+        </div>
+        <div class="param-label">SPAN</div>
+        <div class="param-val">
+          bipolar cluster-frequency spread |
+          <span>CW:</span> introduces stereo spread
+        </div>
+        <div class="param-label">MORPH</div>
+        <div class="param-val">cluster scan</div>
+        <div class="param-label">FUSE</div>
+        <div class="param-val">
+          <span>CCW:</span> stereo chorus mix | <span>CW:</span> saturation mix
+          and gain
+        </div>
+        <div class="param-label">SEED</div>
+        <div class="param-val">
+          cluster pitch and wave offset randomization + delay tap spacing
+        </div>
+        <div class="param-label">SCAN</div>
+        <div class="param-val">base wavetable set randomization</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-3" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .pico-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #1e1e1e; /* Etwas dunkler als Dual FX */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    /* Fullscreen Setup */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .pico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .pico-brand {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: -5px;
+  }
+
+  .pico-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .pico-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .pico-row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    border-bottom: 1px solid #333;
+    font-size: clamp(11px, 2vh + 0.5vw, 40px);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .pico-row:last-child {
+    border-bottom: none;
+  }
+
+  .pico-row.header {
+    flex-grow: 0;
+    padding-bottom: 1vh;
+    border-bottom: 2px solid #ffffff;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(10px, 1.5vh + 0.5vw, 25px);
+    color: #ffffff;
+  }
+
+  /* Spaltenbreiten */
+  .col-led {
+    width: 15%;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .col-fx {
+    width: 35%;
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+  .col-p1 {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .col-p2 {
+    width: 25%;
+  }
+
+  .sub-note {
+    font-family: "Inter", sans-serif;
+    font-size: 0.45em;
+    color: #888;
+    text-transform: none;
+    margin-top: 2px;
+    line-height: 1.2;
+  }
+
+  /* 3D RGB LEDs */
+  .rgb-led {
+    width: clamp(12px, 2.5vh + 0.5vw, 40px);
+    height: clamp(12px, 2.5vh + 0.5vw, 40px);
+    border-radius: 50%;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.6),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid #111;
+  }
+
+  .led-black {
+    background: radial-gradient(circle at 35% 35%, #555, #111, #000);
+    border: 1px solid #444;
+  }
+  .led-white {
+    background: radial-gradient(circle at 35% 35%, #fff, #ddd, #999);
+    box-shadow:
+      0 0 10px rgba(255, 255, 255, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .led-yellow {
+    background: radial-gradient(circle at 35% 35%, #ffffaa, #ffcc00, #997a00);
+    box-shadow:
+      0 0 10px rgba(255, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-green {
+    background: radial-gradient(circle at 35% 35%, #aaffaa, #00cc00, #006600);
+    box-shadow:
+      0 0 10px rgba(0, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-cyan {
+    background: radial-gradient(circle at 35% 35%, #aaffff, #00cccc, #006666);
+    box-shadow:
+      0 0 10px rgba(0, 204, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-blue {
+    background: radial-gradient(circle at 35% 35%, #aaaaff, #0000cc, #000066);
+    box-shadow:
+      0 0 10px rgba(0, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-magenta {
+    background: radial-gradient(circle at 35% 35%, #ffaaff, #cc00cc, #660066);
+    box-shadow:
+      0 0 10px rgba(204, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-red {
+    background: radial-gradient(circle at 35% 35%, #ffaaaa, #cc0000, #660000);
+    box-shadow:
+      0 0 10px rgba(204, 0, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .pico-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .pico-title,
+    .pico-row.header {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .pico-row {
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .col-fx {
+      color: #000;
+    }
+    .sub-note {
+      color: #555;
+    }
+    .rgb-led {
+      box-shadow: none !important;
+    }
+    .led-white {
+      border: 2px solid #ccc;
+    }
+  }
+</style>
+
+<div class="pico-theme">
+  <div class="pico-header">
+    <div>
+      <div class="pico-brand">Erica Synths</div>
+      <h1 class="pico-title">PICO DSP</h1>
+    </div>
+  </div>
+
+  <div class="pico-list">
+    <div class="pico-row header">
+      <div class="col-led">LED</div>
+      <div class="col-fx">EFFECT</div>
+      <div class="col-p1">PARAM 1</div>
+      <div class="col-p2">PARAM 2</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-black"></div></div>
+      <div class="col-fx">MONO DELAY</div>
+      <div class="col-p1">DELAY TIME</div>
+      <div class="col-p2">FEEDBACK</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-white"></div></div>
+      <div class="col-fx">PITCH SHIFT DELAY</div>
+      <div class="col-p1">PITCH</div>
+      <div class="col-p2">DELAY TIME</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-yellow"></div></div>
+      <div class="col-fx">STEREO DELAY</div>
+      <div class="col-p1">DELAY TIME</div>
+      <div class="col-p2">FEEDBACK</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-green"></div></div>
+      <div class="col-fx">GRANULAR DELAY</div>
+      <div class="col-p1">
+        FEEDBACK
+        <span class="sub-note">(Full CW setting freezes delay loop)</span>
+      </div>
+      <div class="col-p2">DELAY TIME</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-cyan"></div></div>
+      <div class="col-fx">REVERB</div>
+      <div class="col-p1">REVERB TIME</div>
+      <div class="col-p2">TONE</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-blue"></div></div>
+      <div class="col-fx">SATURATED REVERB</div>
+      <div class="col-p1">TONE</div>
+      <div class="col-p2">REVERB TIME</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-magenta"></div></div>
+      <div class="col-fx">LESLIE SPEAKER</div>
+      <div class="col-p1">ROTATION SPEED</div>
+      <div class="col-p2">HP FILTER</div>
+    </div>
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-red"></div></div>
+      <div class="col-fx">OVERDRIVE / BITCRUSH</div>
+      <div class="col-p1">OVERDRIVE</div>
+      <div class="col-p2">BITCRUSH</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-4" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .pico-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #1e1e1e;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .pico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .pico-brand {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: -5px;
+  }
+
+  .pico-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .pico-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .pico-row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    border-bottom: 1px solid #333;
+    font-size: clamp(9px, 1.6vh + 0.4vw, 32px);
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .pico-row:last-child {
+    border-bottom: none;
+  }
+
+  .pico-row.header {
+    flex-grow: 0;
+    padding-bottom: 1vh;
+    border-bottom: 2px solid #ffffff;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(9px, 1.4vh + 0.4vw, 22px);
+    color: #ffffff;
+  }
+
+  /* 5 Spalten Layout */
+  .col-led {
+    width: 10%;
+    min-width: 30px;
+    display: flex;
+    justify-content: center;
+  }
+  .col-algo {
+    width: 22%;
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+  .col-p1 {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 5px;
+  }
+  .col-p2 {
+    width: 15%;
+    padding-right: 5px;
+  }
+  .col-set {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Kompakte Listen für CHORD-Modus */
+  .param-list {
+    list-style: none;
+    padding: 0;
+    margin: 2px 0 0 0;
+    font-size: 0.55em;
+    line-height: 1.2;
+    color: #aaa;
+    font-family: "Inter", sans-serif;
+    text-transform: none;
+  }
+  .param-list li {
+    margin-bottom: 1px;
+  }
+  .param-list span.num {
+    color: #4a90e2;
+    font-family: monospace;
+    display: inline-block;
+    width: 12px;
+  }
+
+  .sub-note {
+    font-family: "Inter", sans-serif;
+    font-size: 0.55em;
+    color: #888;
+    text-transform: none;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* 3D RGB LEDs */
+  .rgb-led {
+    width: clamp(10px, 2vh + 0.5vw, 35px);
+    height: clamp(10px, 2vh + 0.5vw, 35px);
+    border-radius: 50%;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.6),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    border: 1px solid #111;
+  }
+
+  .led-yellow {
+    background: radial-gradient(circle at 35% 35%, #ffffaa, #ffcc00, #997a00);
+    box-shadow:
+      0 0 10px rgba(255, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-red {
+    background: radial-gradient(circle at 35% 35%, #ffaaaa, #cc0000, #660000);
+    box-shadow:
+      0 0 10px rgba(204, 0, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-orange {
+    background: radial-gradient(circle at 35% 35%, #ffccaa, #ff8800, #994400);
+    box-shadow:
+      0 0 10px rgba(255, 136, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-green {
+    background: radial-gradient(circle at 35% 35%, #aaffaa, #00cc00, #006600);
+    box-shadow:
+      0 0 10px rgba(0, 204, 0, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-cyan {
+    background: radial-gradient(circle at 35% 35%, #aaffff, #00cccc, #006666);
+    box-shadow:
+      0 0 10px rgba(0, 204, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-blue {
+    background: radial-gradient(circle at 35% 35%, #aaaaff, #0000cc, #000066);
+    box-shadow:
+      0 0 10px rgba(0, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  .led-purple {
+    background: radial-gradient(circle at 35% 35%, #ddaaff, #8800cc, #440066);
+    box-shadow:
+      0 0 10px rgba(136, 0, 204, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+  /* NEU: Pink für den Harmonic Modus */
+  .led-pink {
+    background: radial-gradient(circle at 35% 35%, #ff99cc, #e6007e, #800040);
+    box-shadow:
+      0 0 10px rgba(230, 0, 126, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .pico-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .pico-title,
+    .pico-row.header {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .pico-row {
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .col-algo {
+      color: #000;
+    }
+    .param-list,
+    .sub-note {
+      color: #444;
+    }
+    .rgb-led {
+      box-shadow: none !important;
+    }
+  }
+</style>
+
+<div class="pico-theme">
+  <div class="pico-header">
+    <div>
+      <div class="pico-brand">Erica Synths</div>
+      <h1 class="pico-title">PICO VOICE</h1>
+    </div>
+  </div>
+
+  <div class="pico-list">
+    <div class="pico-row header">
+      <div class="col-led">LED</div>
+      <div class="col-algo">ALGO</div>
+      <div class="col-p1">PARAM 1</div>
+      <div class="col-p2">PARAM 2</div>
+      <div class="col-set">SETTING</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-yellow"></div></div>
+      <div class="col-algo">KARPLUS STRONG</div>
+      <div class="col-p1">DISTORTION</div>
+      <div class="col-p2">NOISE BURST</div>
+      <div class="col-set">----</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-red"></div></div>
+      <div class="col-algo">CHORD</div>
+      <div class="col-p1">
+        CHORD TYPE
+        <ul class="param-list">
+          <li><span class="num">1.</span> M (MAJOR)</li>
+          <li><span class="num">2.</span> m (MINOR)</li>
+          <li><span class="num">3.</span> 7 (SEVENTH)</li>
+          <li><span class="num">4.</span> m7 (MINOR SEVENTH)</li>
+          <li><span class="num">5.</span> M7 (MAJOR SEVENTH)</li>
+          <li><span class="num">6.</span> mM7 (MINOR MAJOR 7)</li>
+          <li><span class="num">7.</span> aug (AUGMENTED)</li>
+          <li><span class="num">8.</span> dim (DIMINISHED)</li>
+        </ul>
+      </div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        WAVEFORM
+        <ul class="param-list">
+          <li><span class="num">1.</span> SINE</li>
+          <li><span class="num">2.</span> TRIANGLE</li>
+          <li><span class="num">3.</span> SAW</li>
+          <li><span class="num">4.</span> SQUARE</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-orange"></div></div>
+      <div class="col-algo">WAVETABLE</div>
+      <div class="col-p1">WAVE SURF</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">1 OR 2 NOTES</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-green"></div></div>
+      <div class="col-algo">BASSLINE</div>
+      <div class="col-p1">RESONANCE</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">SAW/PULSE</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-cyan"></div></div>
+      <div class="col-algo">PWM</div>
+      <div class="col-p1">PWM!</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">1, 2 OR 3 NOTES</div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-blue"></div></div>
+      <div class="col-algo">SUPERSAW</div>
+      <div class="col-p1">DETUNE</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        PHASE LOCK
+        <span class="sub-note">ON/OFF</span>
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-purple"></div></div>
+      <div class="col-algo">WAVEFOLD</div>
+      <div class="col-p1">FOLD</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">
+        <span class="sub-note" style="margin-top: 0"
+          >SINE, 2X SINE,<br />TRIANGLE,<br />2X TRIANGLE</span
+        >
+      </div>
+    </div>
+
+    <div class="pico-row">
+      <div class="col-led"><div class="rgb-led led-pink"></div></div>
+      <div class="col-algo">HARMONIC</div>
+      <div class="col-p1">ADD HARMONICS</div>
+      <div class="col-p2">RELEASE</div>
+      <div class="col-set">WAVEFORM</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-5" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .alter-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #0c0c0c; /* Sehr dunkles Schwarz/Grau, fast wie eine nackte Platine */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .alter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #b87333; /* Folktek Kupfer-Akzentfarbe */
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .alter-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 4px; /* Weites Spacing für den edlen Look */
+    color: #b87333; /* Kupfer */
+    font-family: "Jura", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .alter-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .alter-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 3vw;
+    flex: 1;
+    align-items: stretch;
+  }
+
+  /* Im Querformat/Desktop auf 2 Spalten aufteilen */
+  @media (min-width: 768px), (orientation: landscape) {
+    .alter-content {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      grid-auto-flow: column;
+    }
+    .alter-row:nth-child(4),
+    .alter-row:nth-child(7) {
+      border-bottom: none;
+    }
+  }
+
+  .alter-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 1vh 0;
+  }
+
+  /* Hexagonale Touch-Plate Imitation in Kupfer-Optik */
+  .touch-pad {
+    width: clamp(30px, 6vh + 1vw, 60px);
+    height: clamp(30px, 6vh + 1vw, 60px);
+    /* Hexagon Clip-Path für den ultimativen Folktek-Look */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: radial-gradient(circle at 30% 30%, #e6a87c, #b87333, #5e3219);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: clamp(15px, 2vw, 30px);
+    position: relative;
+  }
+
+  /* Die Nummer in der Touch-Plate */
+  .touch-num {
+    color: #0c0c0c;
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 3vh + 0.5vw, 30px);
+  }
+
+  .algo-name {
+    font-size: clamp(14px, 2.5vh + 0.5vw, 35px);
+    font-weight: 400;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: "Oswald", sans-serif;
+    line-height: 1.2;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .alter-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .alter-title {
+      color: #000;
+    }
+    .alter-brand {
+      color: #000;
+    }
+    .alter-header {
+      border-bottom-color: #000;
+    }
+    .alter-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .algo-name {
+      color: #222;
+    }
+    /* Vereinfachte Pads für den Schwarzweißdruck */
+    .touch-pad {
+      background: #eee;
+      border: 2px solid #000;
+      clip-path: none;
+      border-radius: 50%;
+    }
+    .touch-num {
+      color: #000;
+    }
+  }
+</style>
+
+<div class="alter-theme">
+  <div class="alter-header">
+    <div>
+      <div class="alter-brand">Folktek</div>
+      <h1 class="alter-title">ALTER 1</h1>
+    </div>
+  </div>
+
+  <div class="alter-content">
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">1</span></div>
+      <div class="algo-name">Long Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">2</span></div>
+      <div class="algo-name">Tight, Notated Granular Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">3</span></div>
+      <div class="algo-name">Plate Reverb</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">4</span></div>
+      <div class="algo-name">Shimmering Reverb</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">5</span></div>
+      <div class="algo-name">Distortion Multi-Filter</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">6</span></div>
+      <div class="algo-name">Pitch Delay</div>
+    </div>
+
+    <div class="alter-row">
+      <div class="touch-pad"><span class="touch-num">7</span></div>
+      <div class="algo-name">Stutter Glitch</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-6" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .ladik-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1a1a;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .ladik-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #eab308; /* Ladik-typisches Gelb-Orange als Akzent */
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .ladik-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #eab308;
+    font-weight: 700;
+    margin-bottom: -5px;
+  }
+
+  .ladik-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Grid für die 16 Einträge */
+  .ladik-list {
+    display: grid;
+    grid-template-columns: 1fr; /* Hochformat: 1 Spalte */
+    gap: 0.5vh 2vw;
+    flex-grow: 1;
+    align-items: stretch;
+  }
+
+  /* Querformat / Desktop: 2 Spalten */
+  @media (min-width: 768px), (orientation: landscape) {
+    .ladik-list {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(8, 1fr);
+      grid-auto-flow: column;
+    }
+  }
+
+  .ladik-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding: 0.5vh 0;
+  }
+
+  /* Verhindert doppelte Linien am Ende im Desktop-Grid */
+  @media (min-width: 768px), (orientation: landscape) {
+    .ladik-row:nth-child(8),
+    .ladik-row:nth-child(16) {
+      border-bottom: none;
+    }
+  }
+
+  /* Spalten */
+  .col-no {
+    width: 15%;
+    min-width: 45px;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(12px, 2vh + 0.5vw, 30px);
+    font-weight: 700;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .sub-pos {
+    font-size: 0.5em;
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .col-led {
+    width: 15%;
+    min-width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .col-scale {
+    width: 70%;
+    font-size: clamp(11px, 1.8vh + 0.4vw, 28px);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    word-wrap: break-word;
+  }
+
+  /* Die Ladik-LEDs */
+  .led-dot {
+    width: clamp(10px, 2vh + 0.5vw, 25px);
+    height: clamp(10px, 2vh + 0.5vw, 25px);
+    border-radius: 50%;
+    border: 1px solid #111;
+  }
+
+  .led-off {
+    background: radial-gradient(circle at 35% 35%, #555, #222, #111);
+    box-shadow: inset 0 -1px 3px rgba(0, 0, 0, 0.8);
+  }
+
+  .led-on {
+    background: radial-gradient(circle at 35% 35%, #ffe066, #eab308, #b08000);
+    box-shadow:
+      0 0 10px rgba(234, 179, 8, 0.6),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.4);
+    border-color: #8a6300;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .ladik-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .ladik-header {
+      border-bottom-color: #000;
+    }
+    .ladik-title,
+    .ladik-brand {
+      color: #000;
+    }
+    .ladik-row {
+      border-bottom-color: #ccc;
+    }
+    .col-no,
+    .col-scale,
+    .sub-pos {
+      color: #000;
+    }
+    .led-dot {
+      box-shadow: none !important;
+    }
+    .led-off {
+      background: #eee;
+      border-color: #999;
+    }
+    .led-on {
+      background: #eab308;
+      border-color: #000;
+    }
+    .ladik-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<div class="ladik-theme">
+  <div class="ladik-header">
+    <div>
+      <div class="ladik-brand">Ladik</div>
+      <h1 class="ladik-title">QUANTISER</h1>
+    </div>
+  </div>
+
+  <div class="ladik-list">
+    <div class="ladik-row">
+      <div class="col-no">1 <span class="sub-pos">(ccw)</span></div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">chromatic / halftones</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">2</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">ionian / diatonic major</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">3</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">dorian / diatonic minor 6</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">4</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">phrygian / diatonic minor 7/9-</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">5</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">lydian / diatonic major 5-</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">6</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">mixolydian / diatonic major 7</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">7</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">aeolian / diatonic minor</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">8</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">locrian / diatonic minor 5-/9-</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">9</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">blues</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">10</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">whole tone</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">11</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">major pentatonic</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">12</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">minor pentatonic</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">13</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">spanish / jewish / phrygian major</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">14</div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">oriental</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">15</div>
+      <div class="col-led"><div class="led-dot led-off"></div></div>
+      <div class="col-scale">quints</div>
+    </div>
+    <div class="ladik-row">
+      <div class="col-no">16 <span class="sub-pos">(cw)</span></div>
+      <div class="col-led"><div class="led-dot led-on"></div></div>
+      <div class="col-scale">octaves</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-7" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .mg-theme {
+    /* CSS Variablen für die SVGs */
+    --svg-solid: #ffffff;
+    --svg-empty: #666666;
+    --svg-line: #ffffff;
+    --svg-bg: #111213; /* Hintergrundfarbe (auch für das 'H' genutzt) */
+
+    font-family: "Inter", sans-serif;
+    background-color: var(--svg-bg);
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #d1d5db;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .mg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .mg-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .mg-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 60px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .mg-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .mg-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 1.5vh 0;
+  }
+
+  .mg-row:last-child {
+    border-bottom: none;
+  }
+
+  .mg-row.header {
+    padding-bottom: 0.5vh;
+    border-bottom: 1px solid #555;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background-color: var(--svg-bg);
+    z-index: 10;
+  }
+
+  .col-combo {
+    width: 40%;
+    min-width: 120px;
+    max-width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .col-action {
+    width: 60%;
+    font-size: clamp(11px, 1.8vh + 0.4vw, 24px);
+    font-weight: 500;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 3vw;
+  }
+
+  .combo-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .badge {
+    background-color: #333;
+    color: #ddd;
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Roboto Mono", monospace;
+    white-space: nowrap;
+    border: 1px solid #555;
+  }
+
+  /* Smartphone Querformat & Desktop -> Spaltenweise Sortierung (1-6 links, 7-12 rechts) */
+  @media (min-width: 768px), (orientation: landscape) {
+    .mg-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto repeat(6, 1fr);
+      grid-auto-flow: column;
+      column-gap: 4vw;
+      align-content: start;
+    }
+    .mg-row.header {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+    .mg-row {
+      padding: 1.2vh 0;
+    }
+    .mg-row:nth-child(7) {
+      border-bottom: none;
+    }
+    .mg-header {
+      margin-bottom: 1vh;
+    }
+  }
+
+  @media print {
+    .mg-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto;
+      border: none;
+      --svg-solid: #000000;
+      --svg-empty: #aaaaaa;
+      --svg-line: #000000;
+      --svg-bg: #ffffff;
+    }
+    .mg-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .mg-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .col-action {
+      color: #000;
+    }
+    .badge {
+      border-color: #999;
+      background: #eee;
+      color: #000;
+    }
+    .mg-row.header {
+      position: relative;
+      background: transparent;
+      border-bottom-color: #000;
+    }
+  }
+</style>
+
+<svg style="display: none">
+  <defs>
+    <circle
+      id="c-solid"
+      cx="0"
+      cy="0"
+      r="10"
+      fill="var(--svg-solid)"
+      stroke="var(--svg-solid)"
+      stroke-width="2"
+    />
+    <circle
+      id="c-empty"
+      cx="0"
+      cy="0"
+      r="10"
+      fill="var(--svg-bg)"
+      stroke="var(--svg-empty)"
+      stroke-width="2"
+    />
+    <g id="c-h">
+      <circle
+        cx="0"
+        cy="0"
+        r="10"
+        fill="var(--svg-solid)"
+        stroke="var(--svg-solid)"
+        stroke-width="2"
+      />
+      <text
+        x="0"
+        y="4"
+        font-family="sans-serif"
+        font-size="11"
+        font-weight="bold"
+        fill="var(--svg-bg)"
+        text-anchor="middle"
+      >
+        H
+      </text>
+    </g>
+
+    <g id="arr-r">
+      <polygon
+        points="-9,-4.5 0,0 -9,4.5"
+        fill="var(--svg-line)"
+        stroke="none"
+      />
+    </g>
+    <g id="arr-l">
+      <polygon points="9,-4.5 0,0 9,4.5" fill="var(--svg-line)" stroke="none" />
+    </g>
+  </defs>
+</svg>
+
+<div class="mg-theme">
+  <div class="mg-header">
+    <div>
+      <div class="mg-brand">Make Noise</div>
+      <h1 class="mg-title">MORPHAGENE</h1>
+    </div>
+  </div>
+
+  <div class="mg-list">
+    <div class="mg-row header">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 15" class="combo-svg">
+          <text
+            x="15"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            REC
+          </text>
+          <text
+            x="60"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            SPLICE
+          </text>
+          <text
+            x="105"
+            y="10"
+            font-size="9"
+            fill="var(--svg-empty)"
+            text-anchor="middle"
+            font-family="sans-serif"
+          >
+            SHIFT
+          </text>
+        </svg>
+      </div>
+      <div
+        class="col-action"
+        style="
+          color: var(--svg-empty);
+          font-size: 0.6em;
+          text-transform: uppercase;
+        "
+      >
+        Action
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="84"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="91" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">
+        <span>Input gain selection</span> <span class="badge">MG203</span>
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-h" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="84"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="91" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">
+        <span>Input gain auto-level</span> <span class="badge">Pre MG203</span>
+      </div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Record</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+          <line
+            x1="25"
+            y1="15"
+            x2="39"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-r" x="46" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Record into new splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Splice at position</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Next splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="81"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="74" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete splice marker</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-empty" x="15" y="15" />
+          <use href="#c-h" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="81"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="74" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete all splice markers</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete splice</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-h" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Delete all splices</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-solid" x="60" y="15" />
+          <use href="#c-empty" x="105" y="15" />
+          <line
+            x1="50"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Reel mode: enter/exit</div>
+    </div>
+
+    <div class="mg-row">
+      <div class="col-combo">
+        <svg viewBox="0 0 120 30" class="combo-svg">
+          <use href="#c-solid" x="15" y="15" />
+          <use href="#c-empty" x="60" y="15" />
+          <use href="#c-solid" x="105" y="15" />
+          <line
+            x1="95"
+            y1="15"
+            x2="36"
+            y2="15"
+            stroke="var(--svg-line)"
+            stroke-width="2.5"
+          />
+          <use href="#arr-l" x="29" y="15" />
+        </svg>
+      </div>
+      <div class="col-action">Reel mode: delete reel</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-8" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .plaits-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1c1e; /* Passend zum dunklen Setup */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .plaits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3vh;
+    border-bottom: 2px solid #e91e63; /* Mutable Pink */
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .plaits-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e91e63;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .plaits-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .plaits-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  /* Container für ein einzelnes Setting */
+  .setting-block {
+    background: #222529;
+    border-left: 4px solid #e91e63;
+    padding: 2vh 3vw;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+  }
+
+  /* Der visuelle Button-Indikator */
+  .action-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(16px, 2.5vh + 0.5vw, 32px);
+    font-weight: 700;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1vh;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mi-btn {
+    width: clamp(16px, 3vh, 30px);
+    height: clamp(16px, 3vh, 30px);
+    border-radius: 50%;
+    border: 2px solid #aaa;
+  }
+
+  .mi-btn.held {
+    background-color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  }
+
+  /* Die Regler-Zuordnungen */
+  .param-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: clamp(14px, 2vh + 0.5vw, 28px);
+  }
+
+  /* Das neue Encoder-Icon */
+  .encoder-icon {
+    width: clamp(20px, 3vh, 40px);
+    height: clamp(20px, 3vh, 40px);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #333, #111);
+    border: 2px solid #e91e63;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* Der Indikator-Strich auf dem Encoder */
+  .encoder-icon::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 40%;
+    background-color: #fff;
+    border-radius: 1px;
+  }
+
+  .knob-name {
+    font-family: "Oswald", sans-serif;
+    font-weight: bold;
+    color: #e91e63;
+    width: clamp(100px, 25vw, 200px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .knob-val {
+    font-weight: 700;
+    color: #d1d5db;
+  }
+
+  .led-note {
+    font-size: clamp(11px, 1.5vh + 0.2vw, 20px);
+    color: #888;
+    font-family: "Roboto Mono", monospace;
+    margin-top: 0.5vh;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .led-yellow-alt {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #f1c40f;
+    box-shadow: 0 0 5px #f1c40f;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .plaits-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .plaits-title,
+    .action-header {
+      color: #000;
+    }
+    .plaits-header {
+      border-bottom-color: #000;
+    }
+    .setting-block {
+      background: #f9f9f9;
+      border-left-color: #000;
+      page-break-inside: avoid;
+    }
+    .knob-name {
+      color: #555;
+    }
+    .knob-val {
+      color: #000;
+    }
+    .mi-btn.held {
+      background-color: #000;
+      border-color: #000;
+      box-shadow: none;
+    }
+    .mi-btn {
+      border-color: #666;
+    }
+    .encoder-icon {
+      background: #fff;
+      border-color: #000;
+    }
+    .encoder-icon::after {
+      background-color: #000;
+    }
+  }
+</style>
+
+<div class="plaits-theme">
+  <div class="plaits-header">
+    <div>
+      <div class="plaits-brand">Mutable Instruments</div>
+      <h1 class="plaits-title">PLAITS</h1>
+    </div>
+  </div>
+
+  <div class="plaits-content">
+    <div class="setting-block">
+      <div class="action-header">
+        <div class="btn-group">
+          <div class="mi-btn held"></div>
+          <div class="mi-btn"></div>
+        </div>
+        HOLD BTN 1 (LPG & ENV)
+      </div>
+
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">TIMBRE</div>
+        <div class="knob-val">VCFA ↔ VCA</div>
+      </div>
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">MORPH</div>
+        <div class="knob-val">Time / Decay</div>
+      </div>
+
+      <div class="led-note">
+        <div style="display: flex; gap: 4px">
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+        </div>
+        Value = 4 Yellow LEDs
+      </div>
+    </div>
+
+    <div class="setting-block">
+      <div class="action-header">
+        <div class="btn-group">
+          <div class="mi-btn"></div>
+          <div class="mi-btn held"></div>
+        </div>
+        HOLD BTN 2 (FREQ RANGE)
+      </div>
+
+      <div class="param-row">
+        <div class="encoder-icon"></div>
+        <div class="knob-name">HARMONICS</div>
+        <div class="knob-val">C0 ↔ C7 ↔ 8 Oct</div>
+      </div>
+
+      <div class="led-note">
+        <div style="display: flex; gap: 4px">
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+          <div class="led-yellow-alt"></div>
+        </div>
+        Last setting = All LEDs lit (8-Octave Range)
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-9" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .nrings-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #1a1c1e; /* Ein dunkles Anthrazit, passend zum Panel */
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .nrings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3vh;
+    border-bottom: 2px solid #555;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .nrings-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .nrings-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 55px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .nrings-subtitle {
+    color: #f39c12; /* Easter Egg Akzentfarbe */
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(12px, 1.5vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .nrings-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Die Regler-Zeilen */
+  .knob-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(15px, 4vw, 50px);
+    width: 100%;
+    padding: 1vh 0;
+    border-bottom: 1px solid #2a2c2e;
+  }
+
+  .knob-row:last-of-type {
+    border-bottom: none;
+  }
+
+  /* Beschriftung in der Mitte */
+  .knob-label {
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(14px, 2.5vh + 1vw, 35px);
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #ccc;
+    width: clamp(60px, 15vw, 120px);
+    text-align: center;
+  }
+
+  /* Basis-Styling für die Potis */
+  .knob {
+    border-radius: 50%;
+    background: linear-gradient(145deg, #333, #111);
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.6),
+      inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    position: relative;
+    border: 1px solid #000;
+  }
+
+  .knob-sm {
+    width: clamp(25px, 5vh + 1vw, 50px);
+    height: clamp(25px, 5vh + 1vw, 50px);
+  }
+
+  .knob-lg {
+    width: clamp(40px, 8vh + 1.5vw, 80px);
+    height: clamp(40px, 8vh + 1.5vw, 80px);
+  }
+
+  /* Der weiße Indikator-Strich */
+  .knob-inner {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .knob-inner::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(2px, 0.4vw, 4px);
+    height: 25%;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Die Rotationen */
+  .pos-cw .knob-inner {
+    transform: rotate(135deg);
+  }
+  .pos-ccw .knob-inner {
+    transform: rotate(-135deg);
+  }
+  .pos-mid .knob-inner {
+    transform: rotate(0deg);
+  }
+
+  /* Action Box unten */
+  .action-box {
+    margin-top: 2vh;
+    padding: 2vh 3vw;
+    background-color: #222428;
+    border: 2px dashed #444;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 90%;
+    max-width: 500px;
+    justify-content: center;
+  }
+
+  .action-text {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(11px, 1.8vh + 0.4vw, 20px);
+    color: #fff;
+    text-align: center;
+  }
+
+  .action-text strong {
+    color: #f39c12;
+  }
+
+  /* Blinkende LED für das Feedback */
+  .mode-led {
+    width: clamp(12px, 2vh, 20px);
+    height: clamp(12px, 2vh, 20px);
+    border-radius: 50%;
+    background-color: #ff3333;
+    box-shadow: 0 0 10px #ff3333;
+    animation: blink 0.8s infinite alternate;
+    border: 1px solid #222;
+    flex-shrink: 0;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0.2;
+      box-shadow: 0 0 2px #ff3333;
+    }
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 15px #ff3333;
+    }
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .nrings-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto !important;
+      border: none;
+    }
+    .nrings-title,
+    .nrings-brand,
+    .knob-label,
+    .action-text {
+      color: #000;
+    }
+    .nrings-header {
+      border-bottom-color: #000;
+    }
+    .knob-row {
+      border-bottom-color: #ccc;
+    }
+    .knob {
+      background: #eee;
+      box-shadow: none;
+      border: 2px solid #333;
+    }
+    .knob-inner::before {
+      background-color: #000;
+      box-shadow: none;
+    }
+    .action-box {
+      background-color: #fff;
+      border-color: #000;
+    }
+    .mode-led {
+      animation: none;
+      background-color: #fff;
+      border: 2px solid #000;
+      box-shadow: none;
+    }
+  }
+</style>
+
+<div class="nrings-theme">
+  <div class="nrings-header">
+    <div>
+      <div class="nrings-brand">Nano Rings</div>
+      <h1 class="nrings-title">nRiNGS</h1>
+    </div>
+    <div class="nrings-subtitle">Easter Egg</div>
+  </div>
+
+  <div class="nrings-content">
+    <div class="knob-row">
+      <div class="knob knob-sm pos-cw"><div class="knob-inner"></div></div>
+      <div class="knob-label">FRQ</div>
+      <div class="knob knob-lg pos-ccw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-cw"><div class="knob-inner"></div></div>
+      <div class="knob-label">SHP</div>
+      <div class="knob knob-lg pos-cw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">BRI</div>
+      <div class="knob knob-lg pos-ccw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">DAM</div>
+      <div class="knob knob-lg pos-mid"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob knob-sm pos-ccw"><div class="knob-inner"></div></div>
+      <div class="knob-label">POS</div>
+      <div class="knob knob-lg pos-cw"><div class="knob-inner"></div></div>
+    </div>
+
+    <div class="action-box">
+      <div class="action-text">
+        Hold down lower button <strong>(MODE)</strong> until flash
+      </div>
+      <div class="mode-led"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-10" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .pt-theme {
+    font-family: "Oswald", sans-serif;
+    background-color: #121212;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #b0b1b3;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  /* Der Toggle Hack */
+  #pt-toggle {
+    display: none;
+  }
+
+  .pt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #5a5c60;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .pt-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #777;
+    margin-bottom: -5px;
+  }
+
+  .pt-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Toggle Button Styling */
+  .toggle-btn {
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(10px, 1.5vh, 16px);
+    font-weight: 700;
+    color: #fff;
+    border: 1px solid #777;
+    user-select: none;
+    transition: all 0.2s;
+  }
+
+  .toggle-btn:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  #pt-toggle:checked ~ .pt-header .toggle-btn {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+  #pt-toggle:checked ~ .pt-header .toggle-btn::after {
+    content: " (ON)";
+  }
+
+  /* Listen-Layout */
+  .pt-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1vh 2vw;
+    flex-grow: 1;
+    height: 100%;
+    align-items: stretch;
+    overflow-y: hidden;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .pt-list {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      grid-auto-flow: column;
+    }
+  }
+
+  .pt-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid #222;
+    padding: 1vh 1vw;
+  }
+
+  .pt-main-line {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  @media (min-width: 768px), (orientation: landscape) {
+    .pt-row:nth-child(4),
+    .pt-row:nth-child(7) {
+      border-bottom: none;
+    }
+  }
+
+  .col-icon {
+    width: 25%;
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .col-mode {
+    width: 75%;
+    font-size: clamp(14px, 2.5vh + 1.2vw, 45px);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  /* EXPANDED VIEW CSS */
+  #pt-toggle:checked ~ .pt-list {
+    grid-template-columns: 1fr; /* Zwingt alles in 1 Spalte für die Details */
+    grid-auto-rows: auto;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-row {
+    justify-content: flex-start;
+    padding: 2vh 0;
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-row:nth-last-child(2) {
+    border-bottom: 1px solid #222; /* Linien-Korrektur in der 1-Spalten-Ansicht */
+  }
+
+  #pt-toggle:checked ~ .pt-list .pt-desc {
+    display: grid;
+  }
+
+  /* Beschreibungs-Grid */
+  .pt-desc {
+    display: none;
+    grid-template-columns: 55px 1fr;
+    column-gap: 15px;
+    row-gap: 6px;
+    width: 100%;
+    margin-top: 15px;
+    padding-left: clamp(15px, 2vw, 25px);
+    font-family: "Inter", sans-serif;
+    font-size: clamp(10px, 1.4vh + 0.2vw, 20px);
+    color: #b0b1b3;
+  }
+
+  .desc-lbl {
+    font-weight: bold;
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .desc-val span {
+    color: #777;
+    font-family: monospace;
+  }
+
+  /* Die neue scrollbare Skalen-Tabelle */
+  .scale-table-wrapper {
+    grid-column: 1 / -1;
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .scale-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Inter", sans-serif;
+    font-size: clamp(9px, 1.2vh + 0.2vw, 15px);
+    min-width: 600px; /* Erzwingt horizontales Scrollen auf Smartphones */
+  }
+
+  .scale-table th,
+  .scale-table td {
+    padding: 6px 10px;
+    text-align: left;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+  }
+
+  .scale-table th:last-child,
+  .scale-table td:last-child {
+    border-right: none;
+  }
+
+  .scale-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .scale-table th {
+    background-color: #222;
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .scale-table td {
+    color: #aaa;
+    white-space: nowrap;
+  }
+
+  .scale-table td span {
+    color: #666;
+    font-family: monospace;
+    margin-right: 4px;
+  }
+
+  /* Hardware-Diffusor-Ringe */
+  .arc-container {
+    position: relative;
+    width: clamp(35px, 8vh + 2vw, 90px);
+    height: clamp(35px, 8vh + 2vw, 90px);
+  }
+
+  .arc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: clamp(3px, 0.5vh + 0.1vw, 7px) solid rgba(255, 255, 255, 0.12);
+    border-bottom-color: transparent !important;
+    transition: all 0.3s ease;
+  }
+
+  .arc.outer {
+    width: 90%;
+    height: 90%;
+  }
+  .arc.middle {
+    width: 60%;
+    height: 60%;
+  }
+  .arc.inner {
+    width: 30%;
+    height: 30%;
+  }
+
+  .arc.active {
+    border-color: #ffffff;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+  }
+
+  @media print {
+    .pt-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: auto;
+      border: none;
+    }
+    .pt-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .pt-row {
+      border-bottom-color: #ccc;
+      page-break-inside: avoid;
+    }
+    .col-mode,
+    .desc-lbl {
+      color: #000;
+    }
+    .desc-val {
+      color: #333;
+    }
+    .arc {
+      border-color: #eee;
+    }
+    .arc.active {
+      border-color: #000;
+      filter: none;
+    }
+    .toggle-btn {
+      display: none !important;
+    }
+    .pt-list {
+      grid-template-columns: 1fr;
+      overflow: visible;
+    }
+    .pt-desc {
+      display: grid !important;
+    }
+    .scale-table-wrapper {
+      border-color: #ccc;
+      overflow-x: visible;
+      background: none;
+    }
+    .scale-table {
+      min-width: auto;
+    }
+    .scale-table th {
+      background-color: #eee;
+      color: #000;
+      border-color: #ccc;
+    }
+    .scale-table td {
+      color: #222;
+      border-color: #ccc;
+      white-space: normal;
+    }
+    .scale-table td span {
+      color: #888;
+    }
+  }
+</style>
+
+<div class="pt-theme">
+  <input type="checkbox" id="pt-toggle" />
+
+  <div class="pt-header">
+    <div>
+      <div class="pt-brand">Robaux</div>
+      <h1 class="pt-title">3PT</h1>
+    </div>
+    <label for="pt-toggle" class="toggle-btn">SHOW DETAILS</label>
+  </div>
+
+  <div class="pt-list">
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">Tripot</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">BIG/CV</div>
+        <div class="desc-val">CV Amount</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Minimum (0V to 5V)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Offset (-50 to +50)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Maximum (0V to 5V)</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">LFO (unipolar)</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">BIG/CV</div>
+        <div class="desc-val">Main Frequency</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Frequency Multiplier</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Waveform (Sine ↔ Square)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Slew Limit</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Chord Progression</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">1V/Octave</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">
+          <span>[L]</span> Root <span>[M]</span> Maj/Min
+          <span>[R]</span> Variation
+        </div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Note Compress</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Note Offset</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner"></div>
+          </div>
+        </div>
+        <div class="col-mode">Quantizer</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">1V/Octave</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Root Key (C to B)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Scale Bank (1 to 5)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Scale (1 to 5)</div>
+
+        <div class="scale-table-wrapper">
+          <table class="scale-table">
+            <thead>
+              <tr>
+                <th>BANK 1</th>
+                <th>BANK 2</th>
+                <th>BANK 3</th>
+                <th>BANK 4</th>
+                <th>BANK 5</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span>1.</span>Chromatic</td>
+                <td><span>1.</span>Wholetone</td>
+                <td><span>1.</span>Phrygian</td>
+                <td><span>1.</span>Raga Bhairav</td>
+                <td><span>1.</span>Arabian</td>
+              </tr>
+              <tr>
+                <td><span>2.</span>Major Pentatonic</td>
+                <td><span>2.</span>Diminish</td>
+                <td><span>2.</span>Lydian</td>
+                <td><span>2.</span>Raga Gamanasrama</td>
+                <td><span>2.</span>Egyptian</td>
+              </tr>
+              <tr>
+                <td><span>3.</span>Minor Pentatonic</td>
+                <td><span>3.</span>Combination Diminish</td>
+                <td><span>3.</span>Mixolydian</td>
+                <td><span>3.</span>Raga Todi</td>
+                <td><span>3.</span>Hawaiian</td>
+              </tr>
+              <tr>
+                <td><span>4.</span>Major Blues</td>
+                <td><span>4.</span>Ionian</td>
+                <td><span>4.</span>Aeolian</td>
+                <td><span>4.</span>Spanish</td>
+                <td><span>4.</span>Bali Pelog</td>
+              </tr>
+              <tr>
+                <td><span>5.</span>Minor Blues</td>
+                <td><span>5.</span>Dorian</td>
+                <td><span>5.</span>Locrian</td>
+                <td><span>5.</span>Gypsy</td>
+                <td><span>5.</span>Japanese</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Random Generator</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Trigger Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Minimum Value</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Maximum Value</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Mode (Linear, Chr, Maj, Min)</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Sequencer</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Clock Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Steps 1, 2, 3</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Step 8 | Seq. Length | Step 4</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Steps 7, 6, 5</div>
+      </div>
+    </div>
+
+    <div class="pt-row">
+      <div class="pt-main-line">
+        <div class="col-icon">
+          <div class="arc-container">
+            <div class="arc outer active"></div>
+            <div class="arc middle active"></div>
+            <div class="arc inner active"></div>
+          </div>
+        </div>
+        <div class="col-mode">Euclidean Rhythm</div>
+      </div>
+      <div class="pt-desc">
+        <div class="desc-lbl">CV IN</div>
+        <div class="desc-val">Clock Input</div>
+        <div class="desc-lbl">ROW 1</div>
+        <div class="desc-val">Length (1 to 16)</div>
+        <div class="desc-lbl">ROW 2</div>
+        <div class="desc-val">Pulses (1 to 16)</div>
+        <div class="desc-lbl">ROW 3</div>
+        <div class="desc-val">Offset</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-11" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@400;700&display=swap");
+
+  .proteus-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #121212;
+    padding: 2vh 2vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    /* Fullscreen Setup */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 400px;
+  }
+
+  .proteus-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5vh;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 1vh;
+    flex-shrink: 0;
+  }
+
+  .proteus-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-weight: 700;
+  }
+
+  .proteus-title {
+    color: #ffffff;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  /* Flexibler Container für die Seiten */
+  .proteus-content {
+    display: flex;
+    flex-direction: column; /* Standard: Untereinander (Hochformat) */
+    flex-grow: 1;
+    gap: 2vh;
+  }
+
+  .page-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Dehnt die Sektion gleichmäßig */
+  }
+
+  .page-title {
+    background-color: #2a2a2a;
+    padding: 1vh 1vw;
+    font-family: "Roboto Mono", monospace;
+    font-size: clamp(12px, 2vh + 0.5vw, 35px);
+    font-weight: 700;
+    border-left: 4px solid #4a90e2;
+    color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .scale-row {
+    display: flex;
+    flex-grow: 1; /* Jede Skala dehnt sich gleichmäßig in die Höhe */
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: clamp(11px, 1.8vh + 0.5vw, 35px);
+    line-height: 1.2;
+  }
+
+  .scale-row:last-child {
+    border-bottom: none;
+  }
+
+  .col-num {
+    font-family: "Roboto Mono", monospace;
+    color: #4a90e2;
+    width: 15%;
+    min-width: 40px;
+    font-weight: 700;
+  }
+
+  .col-name {
+    width: 35%;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .col-notes {
+    width: 50%;
+    color: #aaa;
+    font-size: 0.85em; /* Noten immer etwas kleiner als der Rest */
+  }
+
+  /* AUTOMATISCHER SPALTEN-MODUS FÜR QUERFORMAT / DESKTOP */
+  @media (orientation: landscape) {
+    .proteus-content {
+      flex-direction: row; /* Nebeneinander anordnen */
+      gap: 3vw;
+    }
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .proteus-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .proteus-title {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    .proteus-header {
+      border-bottom-color: #000;
+    }
+    .page-title {
+      background-color: #eee;
+      color: #000;
+      border-left-color: #4a90e2;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .scale-row {
+      border-bottom-color: #ccc;
+      color: #222;
+    }
+    .col-name {
+      color: #000;
+    }
+    .col-notes {
+      color: #555;
+    }
+    .col-num {
+      color: #000;
+    }
+  }
+</style>
+
+<div class="proteus-theme">
+  <div class="proteus-header">
+    <div class="proteus-brand">Seaside Modular</div>
+    <h1 class="proteus-title">PROTEUS</h1>
+  </div>
+
+  <div class="proteus-content">
+    <div class="page-section">
+      <div class="page-title">PAGE 1</div>
+      <div class="scale-row">
+        <div class="col-num">1.</div>
+        <div class="col-name">Major</div>
+        <div class="col-notes">(C D E F G A B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">2.</div>
+        <div class="col-name">Natural Minor</div>
+        <div class="col-notes">(C D Eb F G Ab Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">3.</div>
+        <div class="col-name">Harmonic Minor</div>
+        <div class="col-notes">(C D Eb F G Ab B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">4.</div>
+        <div class="col-name">Major Pentatonic</div>
+        <div class="col-notes">(C D E G A)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">5.</div>
+        <div class="col-name">Minor Pentatonic</div>
+        <div class="col-notes">(C Eb F G Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">6.</div>
+        <div class="col-name">Dorian</div>
+        <div class="col-notes">(C D Eb F G A Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">7.</div>
+        <div class="col-name">Mixolydian</div>
+        <div class="col-notes">(C D E F G A Bb)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">8.</div>
+        <div class="col-name">Bhairavi</div>
+        <div class="col-notes">(C Db Eb F G Ab Bb)</div>
+      </div>
+    </div>
+
+    <div class="page-section">
+      <div class="page-title">PAGE 2</div>
+      <div class="scale-row">
+        <div class="col-num">C1-C6</div>
+        <div class="col-name">Custom Scales</div>
+        <div class="col-notes">See manual</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">7.</div>
+        <div class="col-name">Chromatic</div>
+        <div class="col-notes">(C C# D Eb E F F# G G# A Bb B)</div>
+      </div>
+      <div class="scale-row">
+        <div class="col-num">8.</div>
+        <div class="col-name">Tuning</div>
+        <div class="col-notes">Only outputs C to help you tune</div>
+      </div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+      <div class="scale-row" style="border: none; visibility: hidden"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="module-12" class="card-container ">
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Jura:wght@500;700&family=Oswald:wght@400&family=Inter:wght@400;700&display=swap");
+
+  .cw-theme {
+    font-family: "Inter", sans-serif;
+    background-color: #161616; /* Dunkler Hintergrund für starken Kontrast zum weißen Panel */
+    padding: 2vh 1vw;
+    border-radius: 8px;
+    color: #e0e0e0;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 90px);
+    min-height: 500px;
+  }
+
+  .cw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1vh;
+    padding-left: 1vw;
+    flex-shrink: 0;
+  }
+
+  .cw-brand {
+    font-size: clamp(10px, 1vh + 0.5vw, 18px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: -5px;
+  }
+
+  .cw-title {
+    color: #ffffff;
+    font-family: "Jura", sans-serif;
+    font-size: clamp(24px, 4vh + 2vw, 70px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .cw-patchbay {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  .cw-row {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  /* Das virtuelle weiße Modul-Panel in der Mitte */
+  .cw-panel {
+    background: linear-gradient(
+      90deg,
+      #d4d4d4 0%,
+      #f0f0f0 10%,
+      #ffffff 50%,
+      #f0f0f0 90%,
+      #d4d4d4 100%
+    );
+    display: flex;
+    justify-content: center;
+    gap: clamp(15px, 4vw, 50px); /* Abstand zwischen den Buchsen wächst mit */
+    padding: 0.5vh 2vw;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    height: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Oben und unten abgerundet wie ein echtes Panel */
+  .cw-row:first-child .cw-panel {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  .cw-row:last-child .cw-panel {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  /* Die Buchsen (Jacks) */
+  .cw-jack {
+    width: clamp(20px, 4vh + 1vw, 50px);
+    height: clamp(20px, 4vh + 1vw, 50px);
+    background-color: #0a0a0a;
+    border-radius: 50%;
+    box-shadow:
+      inset 0 4px 6px rgba(0, 0, 0, 0.9),
+      0 1px 1px rgba(255, 255, 255, 1);
+    border: clamp(2px, 0.3vh, 4px) solid #ccc;
+    position: relative;
+  }
+
+  .cw-jack::after {
+    content: "";
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    background-color: #000;
+    box-shadow: inset 0 2px 4px #000;
+  }
+
+  /* Text-Labels links und rechts */
+  .cw-label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2vw;
+  }
+
+  .cw-label.left {
+    text-align: right;
+  }
+  .cw-label.right {
+    text-align: left;
+  }
+
+  .mod-name {
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(11px, 2vh + 0.8vw, 35px);
+    font-weight: bold;
+    color: #ffffff;
+    text-transform: uppercase;
+    line-height: 1.1;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .mod-signal {
+    font-size: clamp(9px, 1.2vh + 0.4vw, 20px);
+    font-family: "Jura", sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Farbkodierung für sofortige Erkennung */
+  .signal-clock {
+    color: #ff8800;
+  } /* Orange für Clock */
+  .signal-reset {
+    color: #00bfff;
+  } /* Blau für Reset */
+  .signal-none {
+    color: #444;
+  } /* Grau für unbenutzt */
+
+  .mod-empty {
+    color: #444;
+    font-style: italic;
+  }
+
+  /* Print-Optimierung */
+  @media print {
+    .cw-theme {
+      background-color: #fff;
+      padding: 0;
+      color: #000;
+      height: 100vh;
+      border: none;
+    }
+    .cw-title,
+    .mod-name {
+      color: #000;
+    }
+    .cw-header {
+      border-bottom-color: #000;
+    }
+    .cw-panel {
+      box-shadow: none;
+      border: 2px solid #000;
+      background: #fff;
+    }
+    .cw-jack {
+      border-color: #666;
+    }
+  }
+</style>
+
+<div class="cw-theme">
+  <div class="cw-header">
+    <div>
+      <div class="cw-brand">DIY Custom</div>
+      <h1 class="cw-title">CLOCKWERK</h1>
+    </div>
+  </div>
+
+  <div class="cw-patchbay">
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Eloquencer</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Varigate</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Time Wizard</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Time Wizard</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">4ms Divider</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">4ms Divider</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Euclidean Circles</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Euclidean Circles</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Ikerion Div 1</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Ikerion Div 1</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Ikerion Div 2</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Ikerion Div 2</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name mod-empty">Unassigned</div>
+        <div class="mod-signal signal-none">---</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name mod-empty">Unassigned</div>
+        <div class="mod-signal signal-none">---</div>
+      </div>
+    </div>
+
+    <div class="cw-row">
+      <div class="cw-label left">
+        <div class="mod-name">Melodicer</div>
+        <div class="mod-signal signal-reset">RESET</div>
+      </div>
+      <div class="cw-panel">
+        <div class="cw-jack"></div>
+        <div class="cw-jack"></div>
+      </div>
+      <div class="cw-label right">
+        <div class="mod-name">Melodicer</div>
+        <div class="mod-signal signal-clock">CLOCK</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+    <script>
+        function showCard(cardId) {
+            document.querySelectorAll('.card-container').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(cardId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
